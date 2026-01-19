@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treinador de Pronuncia - Time Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1.5rem 1rem;
+            text-align: center;
+        }
+
+        .cover-image {
+            width: 100%;
+            height: auto;
+            max-height: 12rem;
+            object-fit: cover;
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
+        }
+
+        .sentence-block {
+            margin-bottom: 1.5rem;
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .control-btn {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            border: none;
+            cursor: pointer;
+        }
+
+        .control-btn:hover {
+            background-color: #bdc3c7;
+        }
+
+        .record-btn {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .record-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .stop-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .stop-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .playback-btn {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .playback-btn:hover {
+            background-color: #219653;
+        }
+
+        .retry-playback-btn {
+            background-color: #eaf8ff;
+            color: #2980b9;
+        }
+
+        .retry-playback-btn:hover {
+            background-color: #d4ecf7;
+        }
+
+        .word-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem;
+            border-radius: 6px;
+            background-color: #f8f9f9;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .clickable-word {
+            cursor: pointer;
+            font-weight: 500;
+            color: #3498db;
+        }
+
+        .interactive-word {
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            padding: 1px 3px;
+            margin: -1px -3px;
+            border-radius: 4px;
+        }
+
+        .interactive-word:hover {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .word-wrong {
+            color: #dc2626;
+            background-color: #fee2e2;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 text-gray-800 min-h-screen p-4">
+    <div class="w-full max-w-3xl bg-white rounded-xl shadow-lg mx-auto">
+        <img src="../../media/learning_process.png" alt="Capa do Treinador de Pronúncia" class="cover-image"
+            onerror="this.alt='Falha ao carregar a imagem.'; this.src='https://placehold.co/672x192/2c3e50/ffffff?text=Treinador+de+Pronuncia';">
+        <header class="header relative">
+            <div class="absolute top-4 left-4">
+                <a href="../../../index.html"
+                    class="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-lg transition-colors text-sm font-medium no-underline">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    <span class="hidden sm:inline">Voltar ao Menu de atividades</span>
+                    <span class="sm:hidden">Voltar</span>
+                </a>
+            </div>
+            <h1 class="text-3xl font-bold pt-8 md:pt-0">Treinador de Pronúncia</h1>
+            <p class="text-lg mt-1 text-gray-300">"Time Management - Prática de Pronúncia"</p>
+        </header>
+
+        <main class="p-6 md:p-8">
+            <div class="mb-6 bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-lg shadow"
+                role="alert">
+                <div class="flex items-center">
+                    <div class="py-1">
+                        <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-bold">Como usar:</p>
+                        <p class="text-sm">Ao clicar em <strong>'Gravar Pronúncia'</strong>, clique novamente (o texto
+                            mudará para <strong>'Parar Gravação'</strong>) para finalizar. Cada palavra do texto pode
+                            ser clicada para ouvir a pronúncia.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sentences-container"></div>
+
+            <div
+                class="mt-8 p-5 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-xl shadow-lg flex items-center space-x-4">
+                <div>
+                    <svg class="w-10 h-10 text-yellow-900" fill="currentColor" viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M10 2a6 6 0 00-6 6c0 1.947.625 3.738 1.685 5.152L5 16h10l-.685-2.848C13.375 11.738 14 9.947 14 8a6 6 0 00-6-6zM5 18a1 1 0 001 1h8a1 1 0 001-1v-.5a.5.5 0 00-.5-.5h-9a.5.5 0 00-.5.5V18z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="font-bold text-lg text-yellow-900">Próximo Passo:</p>
+                    <p class="text-base leading-relaxed text-yellow-950">"Agora que já teve um pré-treino, envie sua
+                        leitura do texto completo no grupo para passar pela correção do professor."</p>
+                </div>
+            </div>
+            <div class="mt-8 text-center">
+                <a href="../../../index.html"
+                    class="inline-block px-6 py-2 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition">Voltar
+                    ao Início</a>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // TTS logic removed to satisfy project standards (Layer 32).
+        const speechSynthesisObj = null;
+        let selectedVoice = null;
+
+        function getBestMimeType() {
+            const candidates = [
+                'audio/mp4',
+                'audio/mp4;codecs=mp4a.40.2',
+                'audio/webm;codecs=opus',
+                'audio/webm',
+                'audio/ogg;codecs=opus'
+            ];
+            for (const type of candidates) {
+                if (window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(type)) {
+                    return type;
+                }
+            }
+            return '';
+        }
+
+        const MediaRecorderObj = window.MediaRecorder;
+        const feedbackEndpoint = '/.netlify/functions/gemini-proxy';
+        const usePreRecordedAudio = true;
+
+        const trainingText = "Managing time effectively helps reduce pressure and improve daily performance. In the beginning, many people struggle to organize tasks and priorities. Writing simple to-do lists can bring clarity and direction. Setting clear deadlines helps avoid last-minute stress. Breaks are also important to maintain focus and energy. Overloading schedules often leads to frustration and exhaustion. Learning to say no protects mental health and productivity. Digital calendars provide reminders and structure for busy routines. With practice, planning becomes more natural and efficient. In the long run, good time management creates balance, confidence, and greater control over personal and professional life.";
+        const mainText = {
+            title: 'Time Management',
+            text: "Managing time effectively helps reduce pressure and improve daily performance. In the beginning, many people struggle to organize tasks and priorities. Writing simple to-do lists can bring clarity and direction. Setting clear deadlines helps avoid last-minute stress. Breaks are also important to maintain focus and energy. Overloading schedules often leads to frustration and exhaustion. Learning to say no protects mental health and productivity. Digital calendars provide reminders and structure for busy routines. With practice, planning becomes more natural and efficient. In the long run, good time management creates balance, confidence, and greater control over personal and professional life."
+        };
+
+        const sentencesContainer = document.getElementById('sentences-container');
+
+        let sentences = [];
+        let sentenceAudioUrls = [];
+        let isRecording = false;
+        let currentRecordingIndex = -1;
+        let retryAudioUrls = new Map();
+        let mediaRecorder;
+        let audioChunks = [];
+        const chosenMimeType = getBestMimeType();
+
+        const normalizeText = (text) =>
+            text.toLowerCase().replace(/[.,\\/#!$%\\^\\&\\*;:{}=\\-_`~()']/g, "").replace(/\\s{2,}/g, " ").trim();
+
+        function speakSentence(sentence, lang, rate) {
+            if (usePreRecordedAudio) {
+                const filePrefix = rate < 0.8 ? 'sentence_' : 'sentence_';
+                const fileSuffix = rate < 0.8 ? '_slow' : '';
+                const sentenceIndex = sentences.findIndex(s => s.trim() === sentence.trim());
+                if (sentenceIndex !== -1) {
+                    const audioPath = `audio/${filePrefix}${sentenceIndex}${fileSuffix}.mp3`;
+                    const audio = new Audio(audioPath);
+                    audio.playbackRate = rate > 0.8 ? 1.0 : 0.75;
+                    audio.play().catch(e => console.error('Erro ao reproduzir áudio:', e));
+                    return;
+                }
+            }
+            if (speechSynthesisObj && selectedVoice) {
+                const utterance = new SpeechSynthesisUtterance(sentence);
+                utterance.voice = selectedVoice;
+                utterance.lang = lang || 'en-US';
+                utterance.rate = rate || 1.0;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function speakWord(word) {
+            if (usePreRecordedAudio) {
+                const normalizedWord = normalizeText(word);
+                const audioPath = `audio/word_${normalizedWord}.mp3`;
+                const audio = new Audio(audioPath);
+                audio.play().catch(e => console.error('Erro ao reproduzir áudio da palavra:', e));
+                return;
+            }
+            if (speechSynthesisObj && selectedVoice) {
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.voice = selectedVoice;
+                utterance.lang = 'en-US';
+                utterance.rate = 1.0;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function ensureVoiceReady() {
+            if (speechSynthesis && speechSynthesis.getVoices) {
+                selectedVoice = pickPreferredVoice();
+            }
+        }
+
+        function pickPreferredVoice() {
+            const voices = speechSynthesis.getVoices();
+            const enVoice = voices.find(v => v.lang.startsWith('en-'));
+            return enVoice || voices[0] || null;
+        }
+
+        async function retryWord(word, statusSpan, retryBtn, controlsDiv) {
+            if (!MediaRecorderObj) {
+                statusSpan.textContent = 'Navegador não suportado';
+                return;
+            }
+            statusSpan.textContent = 'Gravando...';
+            retryBtn.disabled = true;
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                const mediaRec = new MediaRecorder(stream);
+                const chunks = [];
+
+                mediaRec.ondataavailable = e => chunks.push(e.data);
+                mediaRec.onstop = () => {
+                    const blob = new Blob(chunks, { type: 'audio/webm' });
+                    const audioUrl = URL.createObjectURL(blob);
+                    const audioEl = document.createElement('audio');
+                    audioEl.controls = true;
+                    audioEl.src = audioUrl;
+
+                    retryAudioUrls.set(word, audioUrl);
+                    statusSpan.textContent = 'Gravado';
+                    statusSpan.className = 'text-sm italic text-green-600 w-full sm:w-auto';
+                    retryBtn.textContent = 'Reproduzir';
+                    retryBtn.className = 'control-btn playback-btn';
+                    retryBtn.onclick = () => audioEl.play();
+                    retryBtn.disabled = false;
+
+                    try { stream.getTracks().forEach(t => t.stop()); } catch (e) { }
+                };
+
+                mediaRec.start();
+                setTimeout(() => mediaRec.stop(), 3000);
+            } catch (err) {
+                statusSpan.textContent = 'Erro ao gravar';
+                statusSpan.className = 'text-sm italic text-red-600 w-full sm:w-auto';
+                retryBtn.disabled = false;
+            }
+        }
+
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    const result = reader.result || '';
+                    const base64 = String(result).split(',')[1] || '';
+                    resolve(base64);
+                };
+                reader.onerror = () => reject(new Error('Falha ao ler audio.'));
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        function getAiFeedbackElement(sentenceIndex) {
+            const id = `ai-feedback-${sentenceIndex}`;
+            let el = document.getElementById(id);
+            if (el) return el;
+
+            const feedbackEl = document.getElementById(`feedback-${sentenceIndex}`);
+            if (!feedbackEl) return null;
+
+            el = document.createElement('p');
+            el.id = id;
+            el.className = 'text-sm text-gray-600 mt-3';
+            feedbackEl.appendChild(el);
+            return el;
+        }
+
+        function setSentenceHighlight(sentenceIndex, mistakeWords) {
+            const sentenceEl = document.getElementById(`sentence-text-${sentenceIndex}`);
+            if (!sentenceEl) return;
+
+            const spans = sentenceEl.querySelectorAll('[data-word]');
+            spans.forEach(span => span.classList.remove('word-wrong'));
+
+            if (!Array.isArray(mistakeWords) || mistakeWords.length === 0) return;
+
+            const normalized = new Set(
+                mistakeWords.map(word => normalizeText(word)).filter(Boolean)
+            );
+
+            spans.forEach(span => {
+                const word = span.getAttribute('data-word');
+                if (word && normalized.has(word)) {
+                    span.classList.add('word-wrong');
+                }
+            });
+        }
+
+        async function requestPronunciationFeedback(sentenceIndex, audioBlob, sentenceText, mimeType) {
+            const feedbackEl = getAiFeedbackElement(sentenceIndex);
+            if (feedbackEl) {
+                feedbackEl.textContent = 'Analisando pronuncia...';
+                feedbackEl.className = 'text-sm text-gray-600 mt-3';
+            }
+            setSentenceHighlight(sentenceIndex, []);
+
+            try {
+                const base64Audio = await blobToBase64(audioBlob);
+                if (!base64Audio) throw new Error('Audio vazio.');
+
+                const payload = {
+                    sentenceText,
+                    audio: {
+                        data: base64Audio,
+                        mimeType: mimeType || audioBlob.type || 'audio/webm'
+                    }
+                };
+
+                const response = await fetch(feedbackEndpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText || 'Falha na analise.');
+                }
+
+                const data = await response.json();
+                const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                let parsed = null;
+                try {
+                    parsed = text ? JSON.parse(text) : null;
+                } catch (e) {
+                    parsed = null;
+                }
+
+                const mistakeWords = Array.isArray(parsed?.mistakeWords) ? parsed.mistakeWords : [];
+                setSentenceHighlight(sentenceIndex, mistakeWords);
+
+                if (feedbackEl) {
+                    if (mistakeWords.length) {
+                        feedbackEl.textContent = `Ajuste estas palavras: ${mistakeWords.join(', ')}`;
+                        feedbackEl.className = 'text-sm text-red-600 mt-3';
+                    } else {
+                        feedbackEl.textContent = 'Pronuncia ok.';
+                        feedbackEl.className = 'text-sm text-green-700 mt-3';
+                    }
+                }
+            } catch (err) {
+                console.error('Pronuncia feedback error:', err);
+                if (feedbackEl) {
+                    feedbackEl.textContent = 'Nao foi possivel analisar a pronuncia agora.';
+                    feedbackEl.className = 'text-sm text-red-600 mt-3';
+                }
+            }
+        }
+
+        let globalUtterance = null;
+
+        function speakSentence(text, lang = 'en-US', rate = 0.9) {
+            const index = sentences.indexOf(text);
+            if (index !== -1) {
+                const isSlow = rate <= 0.7;
+                const suffix = isSlow ? '_slow' : '';
+                const audioPath = `audio/sentence_${index}${suffix}.mp3`;
+
+                if (!usePreRecordedAudio) {
+                    console.warn("Pre-recorded audio is disabled and TTS is removed.");
+                    return;
+                }
+
+                const audio = new Audio(audioPath);
+                audio.play().catch(e => {
+                    console.warn(`Audio file not found for index ${index}: ${audioPath}`);
+                });
+                return;
+            }
+            console.warn(`Sentence not found: ${text}`);
+        }
+
+        function speakWord(word, lang = 'en-US') {
+            const cleanWord = word.toLowerCase().replace(/[^\w]/g, '');
+            const audioFilename = `audio/word_${cleanWord}.mp3`;
+
+
+            if (!usePreRecordedAudio) {
+                try {
+                    if (speechSynthesisObj.speaking) speechSynthesisObj.cancel();
+                    const utterance = new SpeechSynthesisUtterance(word);
+                    if (selectedVoice) {
+                        utterance.voice = selectedVoice;
+                        utterance.lang = selectedVoice.lang;
+                    } else {
+                        utterance.lang = 'en-US';
+                    }
+                    utterance.rate = 0.9;
+                    globalUtterance = utterance;
+                    speechSynthesisObj.speak(utterance);
+                } catch (e) {
+                    console.error('speechSynthesis error:', e);
+                }
+                return;
+            }
+
+            const audio = new Audio(audioFilename);
+            audio.oncanplaythrough = () => audio.play();
+            audio.onerror = () => {
+                console.warn(`Word audio not found: ${audioFilename}. TTS fallback is disabled.`);
+            };
+        }
+
+        function playUserRecording(index) {
+            const url = sentenceAudioUrls[index];
+            if (url) {
+                const audioEl = new Audio();
+                audioEl.setAttribute('playsinline', '');
+                audioEl.src = url;
+                audioEl.play().catch(err => {
+                    console.error('Playback failed:', err);
+                });
+            }
+        }
+
+        function retryWord(wordToRetry, statusSpan, retryBtn, controlsDiv) {
+            const existingPlayback = controlsDiv.querySelector('.retry-playback-btn');
+            if (existingPlayback) existingPlayback.remove();
+
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+                const retryRecorder = chosenMimeType ? new MediaRecorder(stream, { mimeType: chosenMimeType }) : new MediaRecorder(stream);
+                const retryAudioChunks = [];
+
+                retryRecorder.addEventListener("dataavailable", e => {
+                    if (e.data && e.data.size > 0) retryAudioChunks.push(e.data);
+                });
+
+                retryBtn.textContent = 'Parar';
+                retryBtn.classList.add('stop-btn');
+                statusSpan.textContent = 'Gravando...';
+
+                retryBtn.onclick = () => {
+                    if (retryRecorder.state === 'recording') retryRecorder.stop();
+                };
+
+                retryRecorder.onstop = () => {
+                    const mime = chosenMimeType || 'audio/webm';
+                    const audioBlob = new Blob(retryAudioChunks, { type: mime });
+                    const audioUrlKey = `${wordToRetry}-${Date.now()}`;
+                    if (retryAudioUrls.has(audioUrlKey)) {
+                        URL.revokeObjectURL(retryAudioUrls.get(audioUrlKey));
+                    }
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    retryAudioUrls.set(audioUrlKey, audioUrl);
+
+                    const playbackBtn = document.createElement('button');
+                    playbackBtn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path></svg> Ouvir Tentativa`;
+                    playbackBtn.className = 'control-btn retry-playback-btn';
+                    playbackBtn.onclick = () => {
+                        const a = new Audio();
+                        a.setAttribute('playsinline', '');
+                        a.src = audioUrl;
+                        a.play();
+                    };
+
+                    controlsDiv.insertBefore(playbackBtn, retryBtn);
+
+                    retryBtn.textContent = 'Praticar';
+                    retryBtn.classList.remove('stop-btn');
+                    statusSpan.textContent = '';
+
+                    retryBtn.onclick = () => retryWord(wordToRetry, statusSpan, retryBtn, controlsDiv);
+                };
+
+                retryRecorder.start();
+            }).catch(err => {
+                console.error('Erro ao acessar microfone: ', err);
+                statusSpan.textContent = 'Permissão ao microfone negada.';
+            });
+        }
+
+        function displayFeedback(sentenceIndex) {
+            const feedbackEl = document.getElementById(`feedback-${sentenceIndex}`);
+            feedbackEl.innerHTML = '';
+            feedbackEl.classList.remove('hidden');
+            getAiFeedbackElement(sentenceIndex);
+
+            const audioUrl = sentenceAudioUrls[sentenceIndex];
+            if (audioUrl) {
+                const playbackContainer = document.createElement('div');
+                playbackContainer.className = 'flex items-center gap-3 flex-wrap mt-2';
+
+                const playbackBtn = document.createElement('button');
+                playbackBtn.id = `playback-btn-${sentenceIndex}`;
+                playbackBtn.onclick = () => playUserRecording(sentenceIndex);
+                playbackBtn.className = 'control-btn playback-btn';
+                playbackBtn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Ouvir Minha Gravação`;
+
+                const adviceText = document.createElement('p');
+                adviceText.className = 'text-sm text-red-600 italic';
+                adviceText.textContent = 'Compare com a original e pratique as palavras que sentir mais necessidade.';
+
+                playbackContainer.appendChild(playbackBtn);
+                playbackContainer.appendChild(adviceText);
+                feedbackEl.appendChild(playbackContainer);
+            }
+
+            const allWords = sentences[sentenceIndex].split(' ').filter(w => w.length > 0);
+
+            const optionalPracticeContainer = document.createElement('div');
+            optionalPracticeContainer.className = 'mt-4 pt-4 border-t border-gray-200';
+
+            const toggleHeader = document.createElement('div');
+            toggleHeader.className = 'flex justify-between items-center cursor-pointer rounded-md p-2 hover:bg-gray-100 transition-colors';
+            toggleHeader.onclick = () => {
+                const list = document.getElementById(`all-words-list-${sentenceIndex}`);
+                const icon = document.getElementById(`toggle-icon-${sentenceIndex}`);
+                list.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+            };
+
+            const optionalTitle = document.createElement('h4');
+            optionalTitle.className = 'font-semibold text-gray-700';
+            optionalTitle.textContent = 'Pratique cada palavra separadamente (Opcional)';
+
+            const toggleIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            toggleIcon.setAttribute('id', `toggle-icon-${sentenceIndex}`);
+            toggleIcon.setAttribute('class', 'w-5 h-5 text-gray-600 transition-transform');
+            toggleIcon.setAttribute('fill', 'none');
+            toggleIcon.setAttribute('stroke', 'currentColor');
+            toggleIcon.setAttribute('viewBox', '0 0 24 24');
+            toggleIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>`;
+
+            toggleHeader.appendChild(optionalTitle);
+            toggleHeader.appendChild(toggleIcon);
+            optionalPracticeContainer.appendChild(toggleHeader);
+
+            const allWordsListEl = document.createElement('ul');
+            allWordsListEl.id = `all-words-list-${sentenceIndex}`;
+            allWordsListEl.className = 'space-y-2 mt-2 hidden';
+            optionalPracticeContainer.appendChild(allWordsListEl);
+            feedbackEl.appendChild(optionalPracticeContainer);
+
+            allWords.forEach(word => {
+                const normalizedWord = normalizeText(word);
+                if (!normalizedWord) return;
+                const li = document.createElement('li');
+                li.className = 'word-item';
+
+                const wordSpan = document.createElement('span');
+                wordSpan.textContent = normalizedWord;
+                wordSpan.className = 'clickable-word';
+                wordSpan.title = 'Clique para ouvir a pronúncia';
+                wordSpan.onclick = () => speakWord(normalizedWord);
+
+                const controlsDiv = document.createElement('div');
+                controlsDiv.className = "flex items-center flex-wrap gap-2";
+                const statusSpan = document.createElement('span');
+                statusSpan.className = 'text-sm italic w-full sm:w-auto text-gray-500';
+                const retryBtn = document.createElement('button');
+                retryBtn.textContent = 'Praticar';
+                retryBtn.className = 'control-btn';
+                retryBtn.onclick = () => retryWord(normalizedWord, statusSpan, retryBtn, controlsDiv);
+
+                controlsDiv.appendChild(statusSpan);
+                controlsDiv.appendChild(retryBtn);
+                li.appendChild(wordSpan);
+                li.appendChild(controlsDiv);
+                allWordsListEl.appendChild(li);
+            });
+        }
+
+        function toggleRecording(index) {
+            const recordBtn = document.getElementById(`record-btn-${index}`);
+
+            if (isRecording && index === currentRecordingIndex) {
+                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                    mediaRecorder.stop();
+                }
+                return;
+            }
+            if (isRecording) {
+                console.warn("Outra gravação já está em andamento.");
+                return;
+            }
+            if (!MediaRecorderObj || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                console.error("MediaRecorder ou getUserMedia não é suportado.");
+                return;
+            }
+
+            isRecording = true;
+            currentRecordingIndex = index;
+            recordBtn.disabled = true;
+
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+                mediaRecorder = chosenMimeType ? new MediaRecorder(stream, { mimeType: chosenMimeType }) : new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.addEventListener("dataavailable", e => {
+                    if (e.data && e.data.size > 0) audioChunks.push(e.data);
+                });
+
+                mediaRecorder.onstop = () => {
+                    const mime = chosenMimeType || 'audio/webm';
+                    const audioBlob = new Blob(audioChunks, { type: mime });
+
+                    if (sentenceAudioUrls[index]) URL.revokeObjectURL(sentenceAudioUrls[index]);
+                    sentenceAudioUrls[index] = URL.createObjectURL(audioBlob);
+
+                    displayFeedback(index);
+                    requestPronunciationFeedback(index, audioBlob, sentences[index], mime);
+
+                    if (recordBtn) {
+                        recordBtn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg> Gravar Pronúncia`;
+                        recordBtn.classList.remove('stop-btn');
+                        recordBtn.classList.add('record-btn');
+                        recordBtn.onclick = () => toggleRecording(index);
+                    }
+
+                    isRecording = false;
+                    currentRecordingIndex = -1;
+                    try { stream.getTracks().forEach(t => t.stop()); } catch (e) { }
+                };
+
+                mediaRecorder.start();
+
+                recordBtn.disabled = false;
+                recordBtn.innerHTML = `<svg class="w-5 h-5 mr-2 animate-pulse" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10"/></svg> Parar Gravação`;
+                recordBtn.classList.add('stop-btn');
+                recordBtn.classList.remove('record-btn');
+
+                recordBtn.onclick = () => {
+                    if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
+                };
+            }).catch(err => {
+                console.error('É necessário permitir o acesso ao microfone.', err);
+                isRecording = false;
+                currentRecordingIndex = -1;
+                recordBtn.disabled = false;
+                if (recordBtn) {
+                    recordBtn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg> Gravar Pronúncia`;
+                    recordBtn.classList.remove('stop-btn');
+                    recordBtn.classList.add('record-btn');
+                    recordBtn.onclick = () => toggleRecording(index);
+                }
+            });
+        }
+
+        function initializeApp() {
+            ensureVoiceReady();
+
+            sentences = mainText.text.match(/[^.!?]+[.!?]+/g) || [mainText.text];
+            sentenceAudioUrls = new Array(sentences.length).fill(null);
+
+            sentencesContainer.innerHTML = sentences.map((sentence, index) => {
+                const interactiveSentenceHtml = sentence.trim().split(' ').map(word => {
+                    const escapedWord = word.replace(/'/g, "\\'");
+                    const normalizedWord = normalizeText(word);
+                    return `<span class="interactive-word" data-word="${normalizedWord}" title="Ouvir pronúncia" onclick="speakWord('${escapedWord}')">${word}</span>`;
+                }).join(' ');
+
+                return `
+                <div class="sentence-block" id="sentence-block-${index}">
+                    <p id="sentence-text-${index}" class="text-lg leading-relaxed mb-4">${interactiveSentenceHtml}</p>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <button onclick="speakSentence(sentences[${index}], 'en-US', 0.88)" class="control-btn">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                            Ouvir Frase
+                        </button>
+                        <button onclick="speakSentence(sentences[${index}], 'en-US', 0.65)" class="control-btn">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            Ouvir Mais Lento
+                        </button>
+                        <button id="record-btn-${index}" onclick="toggleRecording(${index})" class="control-btn record-btn">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                            Gravar Pronúncia
+                        </button>
+                    </div>
+                    <div id="feedback-${index}" class="mt-4 border-t pt-4 hidden"></div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        if (!MediaRecorderObj) {
+            sentencesContainer.innerHTML = '<p class="text-red-500 font-bold text-center">Seu navegador não suporta a API de Gravação de Áudio. Por favor, use um navegador moderno como Google Chrome, Safari iOS 16+ ou Firefox.</p>';
+        }
+
+        window.addEventListener('load', initializeApp);
+        if ('onvoiceschanged' in speechSynthesis) {
+            speechSynthesis.onvoiceschanged = () => { selectedVoice = pickPreferredVoice(); };
+        }
+    </script>
+</body>
+
+</html>

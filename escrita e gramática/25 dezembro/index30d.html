@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Everyday Conversation - Practice Lab</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            bg: '#020617',
+                            surface: '#0f172a',
+                            purple: '#818cf8',
+                            cyan: '#22d3ee',
+                            gold: '#fbbf24',
+                            error: '#f87171',
+                            highlightBlue: '#60a5fa',
+                            pink: '#f472b6',
+                            indigo: '#6366f1',
+                        }
+                    },
+                    animation: {
+                        'shine-sweep': 'shineSweep 3s infinite',
+                        'pulse-glow': 'pulse-glow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'blob': 'blob 10s infinite alternate',
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        shineSweep: {
+                            '0%': { transform: 'translateX(-100%) rotate(25deg)' },
+                            '20%, 100%': { transform: 'translateX(200%) rotate(25deg)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* --- Base Styles --- */
+        body {
+            background-color: #020617;
+            color: #f1f5f9;
+            font-feature-settings: "cv11", "ss01";
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            background: 
+                radial-gradient(1200px 700px at 15% 10%, rgba(34,211,238,0.14), transparent 60%),
+                radial-gradient(900px 600px at 85% 20%, rgba(29,78,216,0.18), transparent 55%),
+                radial-gradient(900px 650px at 50% 80%, rgba(124,58,237,0.12), transparent 60%),
+                linear-gradient(180deg, #0b1430 0%, #070b16 55%, #050712 100%) !important;
+        }
+
+        /* --- Glass Panel --- */
+        .glass-panel {
+            background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            border-radius: 24px;
+        }
+
+        /* --- Typography Effects --- */
+        .text-neon-gold {
+            background: linear-gradient(to right, #facc15, #fbbf24, #d97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.3));
+        }
+
+        /* --- Buttons --- */
+        .btn-luminous {
+            background: linear-gradient(92deg, #0ea5e9 0%, #6366f1 100%);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .btn-luminous:hover:not(:disabled) {
+            box-shadow: 0 0 40px rgba(34, 211, 238, 0.6);
+            transform: translateY(-2px);
+        }
+        .btn-luminous:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            filter: grayscale(1);
+        }
+        
+        .btn-gold {
+            background: linear-gradient(92deg, #facc15 0%, #ca8a04 100%);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: #422006;
+        }
+        .btn-gold:hover {
+            box-shadow: 0 0 40px rgba(250, 204, 21, 0.6);
+            transform: translateY(-2px);
+        }
+
+        /* Botão Proficiência (Indigo/Roxo Escuro) */
+        .btn-proficiency {
+            background: linear-gradient(92deg, #6366f1 0%, #4338ca 100%);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .btn-proficiency:hover {
+            box-shadow: 0 0 40px rgba(99, 102, 241, 0.6);
+            transform: translateY(-2px);
+        }
+
+        /* --- Custom Correction Styles --- */
+        .correction-highlight {
+            color: #f87171; 
+            font-weight: 700;
+            text-decoration: underline;
+            text-decoration-color: #f87171;
+            text-underline-offset: 4px;
+        }
+        
+        .error-highlight {
+            color: #60a5fa; 
+            font-weight: 700;
+            text-decoration: underline;
+            text-decoration-color: #60a5fa;
+            text-underline-offset: 4px;
+        }
+        
+        .phrase-box-text {
+            color: #ffffff;
+            font-size: 1.25rem;
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        /* --- Modal Styles --- */
+        .quiz-option {
+            transition: all 0.2s;
+        }
+        .quiz-option:hover { transform: scale(1.02); }
+        .quiz-option.correct { background-color: rgba(34, 197, 94, 0.2); border-color: #22c55e; color: #4ade80; }
+        .quiz-option.wrong { background-color: rgba(239, 68, 68, 0.2); border-color: #ef4444; color: #f87171; opacity: 0.7; }
+
+        #practiceModalContent::-webkit-scrollbar, #proficiencyResultContent::-webkit-scrollbar { width: 8px; }
+        #practiceModalContent::-webkit-scrollbar-track, #proficiencyResultContent::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 4px; }
+        #practiceModalContent::-webkit-scrollbar-thumb, #proficiencyResultContent::-webkit-scrollbar-thumb { background: rgba(34, 211, 238, 0.3); border-radius: 4px; }
+        #practiceModalContent::-webkit-scrollbar-thumb:hover, #proficiencyResultContent::-webkit-scrollbar-thumb:hover { background: rgba(34, 211, 238, 0.5); }
+
+        /* --- Loading Spinner --- */
+        .loader {
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top: 3px solid #22d3ee;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .prof-bar-bg { background: rgba(255,255,255,0.1); border-radius: 99px; height: 8px; overflow: hidden; }
+        .prof-bar-fill { height: 100%; border-radius: 99px; transition: width 1.5s ease-out; }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyan-500 selection:text-white">
+
+    <div id="configModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[9999] hidden">
+        <div class="glass-panel p-8 max-w-md w-full mx-4">
+            <h2 class="text-2xl font-bold mb-4 text-white font-display">Configuração Inicial</h2>
+            <p class="text-sm text-slate-300 mb-4">Insira sua chave de API do Google Gemini para continuar.</p>
+            <input type="password" id="apiKeyInput" class="w-full p-3 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan mb-6" placeholder="Cole sua chave aqui...">
+            <button onclick="saveApiKey()" class="w-full btn-luminous py-3 rounded-xl font-bold text-white transition">Salvar e Começar</button>
+        </div>
+    </div>
+
+    <div id="proficiencyWarningModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-[9998] hidden opacity-0 transition-opacity duration-300">
+        <div class="glass-panel max-w-md w-full p-8 mx-4 text-center relative border border-brand-indigo/50 shadow-[0_0_50px_rgba(99,102,241,0.2)]">
+            <div class="w-16 h-16 rounded-full bg-brand-indigo/20 flex items-center justify-center mx-auto mb-6 border border-brand-indigo/30">
+                <i class="fas fa-graduation-cap text-3xl text-brand-indigo"></i>
+            </div>
+            
+            <h3 class="text-2xl font-bold text-white mb-4 font-display">Análise de Nível de Teste</h3>
+            
+            <p class="text-slate-300 mb-8 leading-relaxed text-sm text-left bg-black/40 p-4 rounded-xl border border-white/5">
+                <i class="fas fa-info-circle text-brand-cyan mr-1"></i> A nota anterior refere-se à sua <strong>fluência geral</strong> na língua inglesa.<br><br>
+                A avaliação a seguir simula um <strong>exame de proficiência rigoroso</strong> (nível IELTS/TOEFL), analisando critérios técnicos que vão além da simples comunicação. <br><br>
+                <span class="text-slate-400 italic">Se a fluência comunicativa já é o suficiente para você, recomendo não se preocupar com esta próxima nota.</span>
+            </p>
+
+            <div class="flex flex-col gap-3">
+                <button onclick="confirmProficiencyAnalysis()" class="w-full btn-proficiency py-3 rounded-xl font-bold text-white shadow-lg flex items-center justify-center gap-2 group">
+                    <span>Vou fazer testes de proficiência - Prosseguir</span>
+                    <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                </button>
+                <button onclick="closeProficiencyWarning()" class="w-full py-3 rounded-xl font-bold text-slate-400 hover:text-white border border-white/10 hover:bg-white/5 transition-colors">
+                    Fluência é suficiente - Voltar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="proficiencyResultModal" class="fixed inset-0 bg-[#020617] flex flex-col z-[9999] hidden transform transition-transform duration-300 translate-y-full">
+        <div class="flex-none p-4 md:p-6 border-b border-white/10 bg-[#0f172a]/90 backdrop-blur-md flex justify-between items-center z-20">
+            <h2 class="text-xl md:text-2xl font-bold text-white font-display flex items-center gap-3">
+                <i class="fas fa-certificate text-brand-indigo"></i> Relatório do Examinador
+            </h2>
+            <button onclick="closeProficiencyResults()" class="text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-full p-2 w-10 h-10 transition-colors flex items-center justify-center">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 md:p-8" id="proficiencyResultContent">
+            <div id="profLoading" class="hidden h-full flex flex-col items-center justify-center space-y-4">
+                <div class="w-16 h-16 border-4 border-brand-indigo/30 border-t-brand-indigo rounded-full animate-spin"></div>
+                <p class="text-brand-indigo animate-pulse font-medium">O examinador está analisando sua resposta...</p>
+            </div>
+
+            <div id="profContent" class="hidden max-w-4xl mx-auto space-y-8 pb-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-panel p-6 border-brand-indigo/30 flex items-center justify-between relative overflow-hidden">
+                        <div class="absolute -right-6 -top-6 w-32 h-32 bg-brand-indigo/20 rounded-full blur-2xl"></div>
+                        <div>
+                            <p class="text-slate-400 text-sm font-bold uppercase tracking-wider mb-1">Nível CEFR Estimado</p>
+                            <h3 id="cefrLevelDisplay" class="text-5xl font-bold text-white font-display">--</h3>
+                            <p id="cefrDesc" class="text-brand-indigo text-sm mt-2 font-medium">--</p>
+                        </div>
+                        <i class="fas fa-layer-group text-5xl text-brand-indigo/40"></i>
+                    </div>
+
+                    <div class="glass-panel p-6 border-brand-cyan/30 flex items-center justify-between relative overflow-hidden">
+                        <div class="absolute -right-6 -top-6 w-32 h-32 bg-brand-cyan/20 rounded-full blur-2xl"></div>
+                        <div>
+                            <p class="text-slate-400 text-sm font-bold uppercase tracking-wider mb-1">Band Score (Simulado)</p>
+                            <h3 id="bandScoreDisplay" class="text-5xl font-bold text-white font-display">--</h3>
+                            <p class="text-brand-cyan text-sm mt-2 font-medium">Escala 0-9</p>
+                        </div>
+                        <i class="fas fa-star-half-alt text-5xl text-brand-cyan/40"></i>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-8">
+                    <h4 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                        <i class="fas fa-chart-bar text-brand-purple"></i> Análise por Critério
+                    </h4>
+                    <div class="space-y-6" id="criteriaList">
+                        </div>
+                </div>
+
+                <div class="glass-panel p-8 border-l-4 border-green-500 bg-green-900/10">
+                    <h4 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                        <i class="fas fa-arrow-up text-green-400"></i> Como subir de nível (Level Up)
+                    </h4>
+                    
+                    <div class="space-y-6">
+                        <div class="bg-black/30 rounded-xl border border-white/5 p-5">
+                            <p class="text-xs uppercase tracking-wider text-green-400 font-bold mb-2">Versão Avançada (Sugestão)</p>
+                            <p id="profBetterVersion" class="text-white text-lg font-medium leading-relaxed italic">--</p>
+                        </div>
+
+                        <div>
+                            <p class="text-sm font-bold text-white mb-2">Por que esta versão é melhor?</p>
+                            <p id="profBetterVersionReason" class="text-slate-300 text-sm leading-relaxed">--</p>
+                        </div>
+
+                        <div>
+                            <p class="text-sm font-bold text-white mb-3">Dicas práticas para usar agora:</p>
+                            <ul id="profActionableTips" class="grid gap-2 text-sm text-slate-300">
+                                </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-8 border-l-4 border-brand-indigo">
+                    <h4 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                        <i class="fas fa-user-tie text-slate-300"></i> Comentários do Examinador
+                    </h4>
+                    <p id="examinerFeedbackText" class="text-slate-300 leading-relaxed text-lg italic bg-black/30 p-6 rounded-xl border border-white/5">
+                        --
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="practiceModal" class="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-[9000] hidden opacity-0 transition-opacity duration-300">
+        <div class="glass-panel p-6 md:p-8 max-w-4xl w-full mx-4 relative transform transition-all scale-95 duration-300 max-h-[90vh] overflow-y-auto" id="practiceModalContent">
+            
+            <div class="sticky top-0 z-20 flex justify-end mb-2 -mt-2 -mr-2 pointer-events-none">
+                <button onclick="closePractice()" class="pointer-events-auto text-slate-400 hover:text-white bg-black/60 hover:bg-black/80 backdrop-blur-md rounded-full p-2 w-10 h-10 transition-colors shadow-lg border border-white/10 flex items-center justify-center">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <h2 class="text-2xl font-bold text-white font-display mb-2 flex items-center gap-2 mt-[-2.5rem]" id="practiceTitle">
+                <i class="fas fa-dumbbell text-brand-gold"></i> Praticar Erros
+            </h2>
+            <p class="text-slate-400 text-sm mb-6" id="practiceSubtitle">Selecione a palavra correta para preencher o espaço.</p>
+
+            <div id="quizContainer" class="space-y-6"></div>
+            <div id="quizFeedback" class="hidden mt-4 p-4 rounded-xl border"></div>
+        </div>
+    </div>
+
+    <nav class="fixed w-full z-50 transition-all duration-300 backdrop-blur-md bg-[#0f172a]/70 border-b border-white/5">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3 group cursor-pointer">
+                    <div class="relative group-hover:scale-105 transition-transform duration-300">
+                        <img alt="Logo Everyday Conversation" class="relative w-10 h-10 md:w-12 md:h-12 rounded-xl border border-white/20 shadow-2xl object-contain bg-brand-surface" src="media/logo.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <div class="hidden w-12 h-12 rounded-xl bg-gradient-to-br from-brand-purple to-brand-cyan items-center justify-center text-white font-bold text-xl shadow-lg border border-white/20">EC</div>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-lg md:text-xl font-display font-bold text-white tracking-tight leading-none group-hover:text-brand-cyan transition-colors">Everyday</span>
+                        <span class="text-sm md:text-base text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-cyan font-bold leading-none">Conversation</span>
+                    </div>
+                </div>
+                <button id="configBtn" onclick="openConfig()" class="hidden text-sm text-slate-400 hover:text-white transition-colors border border-white/10 px-3 py-1 rounded-full hover:bg-white/5">
+                    <i class="fas fa-cog mr-1"></i> API Key
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative pt-32 pb-20 px-4 min-h-screen flex flex-col items-center">
+        
+        <div class="text-center max-w-4xl mx-auto mb-12 animate-fade-in-up">
+            <div id="currentDate" class="text-brand-cyan/80 font-medium mb-2 text-sm tracking-widest uppercase font-display"></div>
+            <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-brand-cyan/10 border border-brand-cyan/20 mb-6 backdrop-blur-md">
+                <span class="relative flex h-2.5 w-2.5">
+                    <span class="absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75 animate-ping"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500"></span>
+                </span>
+                <span class="text-xs font-bold text-brand-cyan tracking-wide uppercase">AI Tutor Online</span>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-display font-bold text-white mb-6 leading-tight drop-shadow-2xl">
+                Pratique sua <span class="text-neon-gold">escrita e gramática</span>
+            </h1>
+            <p class="text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed mb-4">
+                Responda a pergunta abaixo para receber uma correção detalhada e instantânea focada na sua fluência e confiança.
+            </p>
+            
+            <div class="max-w-2xl mx-auto space-y-3">
+                <div class="bg-white/5 border border-white/10 rounded-xl p-3 flex items-start sm:items-center gap-3 text-left sm:text-center animate-fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="w-8 h-8 rounded-full bg-brand-purple/20 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-microphone-alt text-brand-purple text-sm"></i>
+                    </div>
+                    <p class="text-sm text-slate-300">
+                        <strong class="text-brand-cyan">Dica:</strong> Se preferir, use o botão de microfone e <span class="text-white font-medium">revise sua transcrição</span> antes de enviar.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full max-w-5xl animate-fade-in-up" style="animation-delay: 0.2s;">
+            
+            <div class="glass-panel p-6 mb-8 max-w-md mx-auto">
+                <label class="block text-sm font-bold text-brand-purple mb-2 uppercase tracking-wider">Seu Nome</label>
+                <div class="relative">
+                    <i class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                    <input type="text" id="studentName" class="w-full p-3 pl-10 bg-black/30 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-brand-purple focus:ring-1 focus:ring-brand-purple transition-all" placeholder="Ex: Maria">
+                </div>
+            </div>
+
+            <div class="max-w-3xl mx-auto mb-12">
+                <div class="glass-panel p-8 hover:border-brand-cyan/30 transition-all duration-300 group">
+                    <div class="flex flex-col mb-4">
+                        <div class="flex items-center gap-3 mb-1">
+                            <div class="w-10 h-10 rounded-full bg-brand-cyan/20 border border-brand-cyan/30 flex items-center justify-center text-brand-cyan font-bold">1</div>
+                            <h3 class="text-xl font-bold text-white group-hover:text-brand-cyan transition-colors">Question of the Day</h3>
+                        </div>
+                        <span class="text-xs text-slate-400 font-normal ml-[3.25rem]">(Pergunta do Dia)</span>
+                    </div>
+                    
+                    <label for="q1" class="block text-slate-300 mb-4 font-medium leading-relaxed">
+                        <span id="questionText" class="text-lg text-white font-semibold"></span>
+                        <span id="questionPt" class="block text-sm text-slate-500 font-normal mt-2 italic border-l-2 border-slate-700 pl-3"></span>
+                    </label>
+                    <div class="relative">
+                        <textarea id="q1" rows="6" class="w-full p-4 pr-12 bg-black/30 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan transition-all resize-none" placeholder="Escreva sua resposta aqui ou use o microfone..."></textarea>
+                        <button type="button" onclick="toggleDictation('q1')" onmousedown="event.preventDefault()" class="absolute bottom-3 right-3 text-slate-400 hover:text-brand-cyan transition-all p-2 rounded-full hover:bg-white/10 focus:outline-none" title="Falar resposta (Inglês)">
+                            <i class="fas fa-microphone text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mb-16">
+                <button onclick="submitAnswers()" id="submitBtn" class="btn-luminous px-12 py-5 rounded-full font-bold text-white text-lg shadow-2xl inline-flex items-center gap-3 group">
+                    <span>Enviar para Correção</span>
+                    <i class="fas fa-paper-plane group-hover:translate-x-1 transition-transform"></i>
+                </button>
+                
+                <div id="loadingIndicator" class="hidden mt-6 flex flex-col items-center gap-3 animate-pulse">
+                    <div class="loader"></div>
+                    <span class="text-brand-cyan font-medium tracking-wide">Analisando suas respostas com IA...</span>
+                </div>
+                
+                <div id="errorMessage" class="hidden mt-6 mx-auto max-w-lg p-6 bg-red-900/30 border border-red-500/30 rounded-xl text-red-200 text-sm text-center shadow-lg"></div>
+            </div>
+
+            <div id="resultsArea" class="hidden">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-brand-purple/20 blur-[80px] rounded-full pointer-events-none"></div>
+                    
+                    <div class="glass-panel overflow-hidden relative z-10 border-brand-cyan/20">
+                        <div class="bg-gradient-to-r from-brand-surface via-[#1e1b4b] to-brand-surface p-6 border-b border-white/10 flex justify-between items-center">
+                            <h3 class="font-display font-bold text-xl text-white flex items-center gap-3">
+                                <i class="fas fa-robot text-brand-cyan"></i> Feedback do Tutor
+                            </h3>
+                            <div class="flex items-center gap-3">
+                                <span id="scoreBadge" class="text-lg font-bold text-brand-gold bg-brand-gold/10 px-4 py-1 rounded-full border border-brand-gold/20">
+                                    Score: <span id="displayScore">0</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="p-8 md:p-12 bg-black/20 space-y-10">
+                            
+                            <div class="space-y-3">
+                                <h4 class="text-brand-cyan font-bold text-lg border-b border-brand-cyan/20 pb-2 mb-4">
+                                    <i class="fas fa-quote-left mr-2"></i> Frase Original
+                                </h4>
+                                <div id="originalPhraseContainer" class="bg-black/40 p-6 rounded-xl border border-white/10 phrase-box-text"></div>
+                            </div>
+
+                            <div class="space-y-3">
+                                <h4 class="text-brand-gold font-bold text-lg border-b border-brand-gold/20 pb-2 mb-4">
+                                    <i class="fas fa-check-circle mr-2"></i> Frase Corrigida
+                                </h4>
+                                <div id="correctedPhraseContainer" class="bg-black/40 p-6 rounded-xl border border-white/10 phrase-box-text"></div>
+                            </div>
+
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <div class="space-y-3">
+                                    <h4 class="text-green-400 font-bold text-lg mb-2"><i class="fas fa-comment-dots mr-2"></i>Como melhorar</h4>
+                                    <div id="feedbackText" class="text-slate-300 leading-relaxed bg-white/5 p-4 rounded-xl"></div>
+                                </div>
+                                <div class="space-y-6">
+                                    <div class="space-y-3">
+                                        <h4 class="text-purple-400 font-bold text-lg mb-2"><i class="fas fa-lightbulb mr-2"></i>Dica de Gramática</h4>
+                                        <div id="grammarTipText" class="text-slate-300 leading-relaxed bg-white/5 p-4 rounded-xl"></div>
+                                    </div>
+                                    <div class="space-y-3">
+                                        <h4 class="text-brand-pink font-bold text-lg mb-2"><i class="fas fa-child mr-2"></i>2ª Versão: Dica Simplificada</h4>
+                                        <div id="grammarTipSimplifiedText" class="text-slate-300 leading-relaxed bg-white/5 p-4 rounded-xl border border-brand-pink/20"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="detailedErrorSection" class="hidden space-y-3 pt-4 border-t border-white/5">
+                                <h4 class="text-white font-bold text-lg mb-4 flex items-center gap-2">
+                                    <i class="fas fa-search-plus text-brand-gold"></i> Análise Individual dos Erros
+                                </h4>
+                                <div id="errorBreakdownList" class="space-y-4">
+                                    </div>
+                            </div>
+
+                            <div class="flex flex-col lg:flex-row gap-4 justify-center pt-8 border-t border-white/5">
+                                <button id="practiceBtn" onclick="openPracticeModal(false)" class="btn-luminous px-6 py-4 rounded-xl font-bold text-white shadow-lg flex items-center justify-center gap-2">
+                                    <i class="fas fa-dumbbell"></i> Praticar erros
+                                </button>
+                                <button id="bonusBtn" onclick="openPracticeModal(true)" class="hidden btn-gold px-6 py-4 rounded-xl font-bold text-white shadow-lg flex items-center justify-center gap-2">
+                                    <i class="fas fa-trophy"></i> 🏆 Desafio (15)
+                                </button>
+
+                                <button id="proficiencyBtn" onclick="openProficiencyWarning()" class="btn-proficiency px-6 py-4 rounded-xl font-bold text-white shadow-lg flex items-center justify-center gap-2">
+                                    <i class="fas fa-graduation-cap"></i> Análise de Nível de Teste
+                                </button>
+
+                                <button onclick="resetApp()" class="px-6 py-4 rounded-xl font-bold text-slate-300 hover:text-white border border-white/20 hover:bg-white/5 transition-all flex items-center justify-center gap-2">
+                                    <i class="fas fa-redo"></i> Reiniciar
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-[#020617] border-t border-white/5 py-10">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-xs text-slate-500">© 2025 Everyday Conversation. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // =====================================================================
+        // CONFIGURAÇÃO
+        // =====================================================================
+        // CHAVE INSERIDA AQUI CONFORME SOLICITADO:
+        const TEACHER_API_KEY = "AIzaSyCQvBpG5ZDRhcgb2Iu3bRanXPKkN_hXT3M"; 
+        
+        let currentResultData = null;
+
+        const SYSTEM_PROMPT = `
+Você é um Tutor de Inglês para brasileiros. Sua tarefa é corrigir a frase do aluno e gerar um JSON estruturado para alimentar uma interface interativa.
+
+**REGRAS CRÍTICAS DE SAÍDA:**
+1. A saída DEVE ser estritamente um **JSON VÁLIDO**. Não coloque markdown (\`\`\`json) ao redor. Apenas o JSON puro.
+2. O formato do JSON deve seguir exatamente o schema abaixo.
+
+**Schema do JSON:**
+{
+  "studentName": "Nome do Aluno",
+  "originalPhraseHtml": "A frase original completa do aluno. Nesta string HTML, envolva APENAS as palavras que contêm erros ou precisam de revisão dentro de uma tag <span class='error-highlight'>palavra errada</span>. O resto da frase deve ser texto normal.",
+  "correctedPhraseHtml": "A frase corrigida completa. Nesta string HTML, envolva APENAS as palavras que foram alteradas/corrigidas dentro de uma tag <span class='correction-highlight'>palavra certa</span>. O resto da frase deve ser texto normal.",
+  "errorBreakdown": [
+      {
+          "segment": "Trecho errado (ex: it's going to be)",
+          "correction": "Trecho correto (ex: which would be)",
+          "tag": "Uma das seguintes opções: 'Estrutura Incorreta', 'Incorreta, mas Compreensível', 'Correta, mas Pouco Natural'. Se não houver erro, não inclua.",
+          "reason": "Explicação breve de 1 frase."
+      }
+  ],
+  "grammarScore": 95,
+  "improvementComment": "Um parágrafo amigável. Se o nome for fornecido, use-o (ex: 'Excelente Maria!'). Se NÃO houver nome, NÃO use 'Aluno' ou genéricos, comece direto (ex: 'Excelente!'). Siga com sugestões gerais de melhoria de vocabulário e fluência.",
+  "grammarTip": "Duas dicas breves sobre a regra gramatical principal dos erros cometidos. Linguagem simples e didática.",
+  "grammarTipSimplified": "Explique a mesma regra gramatical acima, mas usando uma analogia divertida ou linguagem extremamente simples, como se explicasse para uma criança de 10 anos.",
+  "quizData": [
+    {
+      "errorIndex": 0,
+      "originalError": "palavra errada",
+      "correctWord": "palavra correta",
+      "contextSnippet": "Um trecho curto (string) contendo 3 palavras antes e 3 palavras depois do erro. No lugar da palavra errada, coloque '_______' (7 sublinhados) para indicar o espaço em branco.",
+      "options": ["palavra correta", "distrator 1", "distrator 2"],
+      "explanation": "Explicação curta (1 frase) do porquê errou."
+    }
+  ],
+  "bonusQuestions": [
+    {
+      "questionContext": "Frase de exemplo com _______ (lacuna) para preencher.",
+      "correctAnswer": "palavra correta",
+      "options": ["palavra correta", "distrator 1", "distrator 2"],
+      "explanation": "Breve explicação da regra."
+    }
+  ]
+}
+
+**Instruções para 'errorBreakdown':**
+Liste CADA erro ou ponto de melhoria encontrado na frase. Para cada um, atribua uma tag de gravidade:
+1. 'Estrutura Incorreta': Erro gramatical grave.
+2. 'Incorreta, mas Compreensível': Erro pequeno ou de concordância que não impede o entendimento.
+3. 'Correta, mas Pouco Natural': Não é erro gramatical, mas um nativo não falaria assim (estranho ou formal demais).
+
+**INSTRUÇÕES ESPECIAIS PARA NOTA 100:**
+- Se o aluno obtiver **nota 100** (sem erros), o array 'quizData' e 'errorBreakdown' devem estar vazios [].
+- EM VEZ DISSO, preencha o array 'bonusQuestions' com **15 questões de gramática aleatórias** (nível interessante, não muito difícil, 3 alternativas).
+- Se a nota for menor que 100, 'bonusQuestions' deve ser vazio [].
+
+**Instruções de Estilo:**
+1. **Frase Original (HTML):** Destaque os erros com <span class='error-highlight'>...</span>.
+2. **Frase Corrigida (HTML):** Destaque as correções com <span class='correction-highlight'>...</span>.
+3. **Cálculo da Nota Gramatical (0-100):**
+   - **Typos:** -0.5 erro.
+   - **Gramática:** -1.0 erro.
+`;
+
+        // ATUALIZADO: Novo schema com suporte a comparação de nível
+        const PROFICIENCY_SYSTEM_PROMPT = `
+Você é um EXAMINADOR OFICIAL de exames de proficiência em inglês (como IELTS, TOEFL, Cambridge). Sua tarefa é analisar a frase submetida pelo aluno com EXTREMO RIGOR TÉCNICO, muito além da fluência básica.
+
+ENTRADA: Nome do Aluno, Texto do Aluno.
+SAÍDA: Apenas JSON Válido.
+
+CRITÉRIOS DE AVALIAÇÃO:
+1. Lexical Resource (Vocabulário): Variedade, precisão, uso de collocations, complexidade.
+2. Grammatical Range & Accuracy: Estruturas complexas, tempos verbais, precisão.
+3. Coherence & Cohesion: Conectivos, fluxo lógico.
+
+SCHEMA DO JSON:
+{
+  "cefrLevel": "B2", // A1, A2, B1, B2, C1, C2
+  "cefrDescription": "Upper Intermediate", 
+  "estimatedBandScore": "6.5", // Estilo IELTS (0-9)
+  "examinerFeedback": "Texto curto e direto (em Português), estilo relatório técnico. Aponte forças e fraquezas específicas.",
+  "criteria": [
+    { "name": "Lexical Resource", "score": 6.0, "comment": "Breve comentário técnico." },
+    { "name": "Grammatical Range", "score": 7.0, "comment": "Breve comentário técnico." },
+    { "name": "Coherence", "score": 6.5, "comment": "Breve comentário técnico." }
+  ],
+  "betterVersion": "Uma reescrita completa da frase do aluno que a elevaria em PELO MENOS um nível de proficiência (ex: se era B1, reescreva como B2/C1). Mantenha o sentido, mas use vocabulário e estruturas mais sofisticadas e acadêmicas.",
+  "betterVersionReason": "Explique tecnicamente (em 1 ou 2 frases) por que essa nova versão pontua mais alto (ex: uso de inversão, voz passiva, collocations raras).",
+  "actionableTips": [
+     "Dica prática 1 para subir de nível",
+     "Dica prática 2 para subir de nível"
+  ]
+}
+`;
+
+        let apiKey = TEACHER_API_KEY.includes("COLE_SUA_CHAVE") ? "" : TEACHER_API_KEY;
+        if (!apiKey) apiKey = localStorage.getItem('gemini_api_key') || '';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Atualiza a pergunta automaticamente às 20:00 (Brasília) e mostra a pergunta atual na tela
+            rotateQuestionIfNeeded();
+            syncQuestionOfDay();
+
+            updateDate();
+            if (!apiKey) {
+                document.getElementById('configModal').classList.remove('hidden');
+                document.getElementById('configBtn').classList.remove('hidden'); 
+            }
+        });
+
+        function updateDate() {
+            const now = new Date();
+            const days = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+            document.getElementById('currentDate').textContent = `${days[now.getDay()]} (${now.toLocaleDateString('pt-BR')})`;
+        }
+
+
+        // =====================================================================
+        // PERGUNTA DO DIA (ATUALIZAÇÃO AUTOMÁTICA - 20:00 HORÁRIO DE BRASÍLIA)
+        // =====================================================================
+        // Importante: a IA precisa saber QUAL é a pergunta atual para corrigir a resposta corretamente.
+        // Por isso, enviamos a pergunta junto com a resposta no prompt do aluno (veja submitAnswers()).
+
+        const QUESTIONS = [
+            {
+                en: "What hobby would you start tomorrow if you had all the necessary resources? Why?",
+                pt: "(Qual hobby você começaria amanhã se tivesse todos os recursos necessários? Por quê?)"
+            },
+            {
+                en: "If you had the opportunity to learn directly from an expert for 48 hours in any field, which field would it be and why?",
+                pt: "(Se você tivesse a oportunidade de aprender diretamente com um especialista por 48 horas em qualquer área, qual área seria e por quê?)"
+            },
+            {
+                en: "What would you miss about your job or workplace if you changed jobs? If you don’t work, answer in relation to a new home or school.",
+                pt: "(O que você sentiria falta do seu trabalho ou ambiente de trabalho se mudasse de emprego? Se você não trabalha, responda pensando em uma nova casa ou escola.)"
+            },
+            {
+                en: "If you started learning a new language tomorrow, which one would you choose? Why?",
+                pt: "(Se você começasse a aprender uma nova língua amanhã, qual escolheria? Por quê?)"
+            },
+            {
+                en: "If you had the power to change one person's life for the better, whose life would you change?",
+                pt: "(Se você tivesse o poder de mudar a vida de uma pessoa para melhor, de quem você mudaria a vida?)"
+            },
+            {
+                en: "What aren't you spending enough time on? Why?",
+                pt: "(Em que você não está gastando tempo suficiente? Por quê?)"
+            }
+        ];
+
+        const QUESTION_STORAGE_KEY = "ec_question_of_day_index_v1";
+        const QUESTION_DATE_KEY = "ec_question_of_day_last_rotation_date_v1";
+
+        function getBrasiliaDateParts() {
+            // Usa o fuso de Brasília (America/Sao_Paulo) mesmo se o usuário estiver em outro fuso
+            const now = new Date();
+
+            const dateParts = new Intl.DateTimeFormat('en-CA', {
+                timeZone: 'America/Sao_Paulo',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            }).formatToParts(now);
+            const dmap = Object.fromEntries(dateParts.map(p => [p.type, p.value]));
+            const ymd = `${dmap.year}-${dmap.month}-${dmap.day}`;
+
+            const timeParts = new Intl.DateTimeFormat('en-GB', {
+                timeZone: 'America/Sao_Paulo',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            }).formatToParts(now);
+            const tmap = Object.fromEntries(timeParts.map(p => [p.type, p.value]));
+            const hour = parseInt(tmap.hour, 10);
+
+            return { ymd, hour };
+        }
+
+        function getCurrentQuestionIndex() {
+            const raw = localStorage.getItem(QUESTION_STORAGE_KEY);
+            const idx = raw ? parseInt(raw, 10) : 0;
+            return Number.isFinite(idx) ? Math.max(0, Math.min(idx, QUESTIONS.length - 1)) : 0;
+        }
+
+        function setCurrentQuestionIndex(idx) {
+            const safe = Math.max(0, Math.min(idx, QUESTIONS.length - 1));
+            localStorage.setItem(QUESTION_STORAGE_KEY, String(safe));
+            return safe;
+        }
+
+        function rotateQuestionIfNeeded() {
+            const { ymd, hour } = getBrasiliaDateParts();
+            const lastDate = localStorage.getItem(QUESTION_DATE_KEY) || "";
+
+            // Só troca a pergunta quando já passou das 20:00 (Brasília) e ainda não trocou hoje
+            if (hour >= 20 && lastDate !== ymd) {
+                const next = (getCurrentQuestionIndex() + 1) % QUESTIONS.length;
+                setCurrentQuestionIndex(next);
+                localStorage.setItem(QUESTION_DATE_KEY, ymd);
+            }
+        }
+
+        function syncQuestionOfDay() {
+            const idx = getCurrentQuestionIndex();
+            const q = QUESTIONS[idx];
+
+            const enEl = document.getElementById('questionText');
+            const ptEl = document.getElementById('questionPt');
+
+            if (enEl) enEl.textContent = q.en;
+            if (ptEl) ptEl.textContent = q.pt;
+
+            // Guarda a pergunta atual para garantir que o submit envie o contexto correto
+            window.__EC_CURRENT_QUESTION_EN = q.en;
+        }
+
+
+        function openConfig() { document.getElementById('configModal').classList.remove('hidden'); }
+
+        function saveApiKey() {
+            const input = document.getElementById('apiKeyInput').value.trim();
+            if (input) {
+                apiKey = input;
+                localStorage.setItem('gemini_api_key', apiKey);
+                document.getElementById('configModal').classList.add('hidden');
+                alert("Chave salva! A página será recarregada.");
+                location.reload(); 
+            } else {
+                alert("Insira uma chave válida.");
+            }
+        }
+
+        // --- MICROFONE (CORRIGIDO PARA EVITAR REPETIÇÃO) ---
+        let recognition;
+        let isRecording = false;
+
+        function toggleDictation(fieldId) {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert("Navegador sem suporte a voz. Use Chrome/Safari.");
+                return;
+            }
+
+            const btnIcon = document.querySelector(`button[onclick="toggleDictation('${fieldId}')"] i`);
+            const textarea = document.getElementById(fieldId);
+
+            if (isRecording) {
+                if (recognition) recognition.stop();
+                return;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            
+            // CORREÇÃO: 'continuous: false' é essencial para evitar duplicação de texto no Android/Mobile.
+            // O usuário precisará tocar novamente para ditar frases longas, mas o texto não repetirá.
+            recognition.continuous = false; 
+            recognition.interimResults = true;
+
+            let initialText = textarea.value;
+            // Adiciona espaço se já houver texto e não terminar com espaço
+            if (initialText && !initialText.endsWith(' ')) initialText += ' ';
+
+            recognition.onstart = () => {
+                isRecording = true;
+                if(btnIcon) btnIcon.className = 'fas fa-stop-circle text-red-500 animate-pulse text-xl';
+                textarea.placeholder = "Ouvindo... (Fale agora)";
+            };
+
+            recognition.onend = () => {
+                isRecording = false;
+                if(btnIcon) btnIcon.className = 'fas fa-microphone text-xl';
+                textarea.placeholder = "Escreva sua resposta ou use o microfone...";
+            };
+
+            recognition.onerror = (event) => {
+                if (event.error === 'no-speech') return; // Ignora silêncio
+                console.warn("Erro de reconhecimento de voz:", event.error);
+                if (event.error === 'not-allowed') {
+                    alert("Permissão de microfone negada. Verifique as configurações do navegador.");
+                }
+                isRecording = false;
+                if(btnIcon) btnIcon.className = 'fas fa-microphone text-xl';
+            };
+
+            recognition.onresult = (e) => {
+                let transcript = '';
+                // Com continuous=false, pegamos apenas o primeiro resultado (o atual) e concatenamos com o texto inicial.
+                // Isso previne loops infinitos de repetição em navegadores móveis.
+                for (let i = 0; i < e.results.length; ++i) {
+                    transcript += e.results[i][0].transcript;
+                }
+                textarea.value = initialText + transcript;
+            };
+
+            recognition.start();
+        }
+
+        // --- SUBMISSÃO E PROCESSAMENTO ---
+        async function submitAnswers() {
+            const q1 = document.getElementById('q1').value.trim();
+            const studentName = document.getElementById('studentName').value.trim();
+            
+            if (!apiKey) { openConfig(); return; }
+            if (!q1) { alert("Por favor, responda a pergunta."); return; }
+
+            const btn = document.getElementById('submitBtn');
+            const loader = document.getElementById('loadingIndicator');
+            const errorMsg = document.getElementById('errorMessage');
+            const resultsArea = document.getElementById('resultsArea');
+            
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            loader.classList.remove('hidden');
+            errorMsg.classList.add('hidden');
+            resultsArea.classList.add('hidden');
+
+            const userPrompt = `Pergunta: ${window.__EC_CURRENT_QUESTION_EN || ''}\nNome: ${studentName}\nResposta do aluno: ${q1}`;
+
+            try {
+                const jsonResponse = await callGeminiAPI(userPrompt, SYSTEM_PROMPT);
+                
+                let data;
+                try {
+                    const cleanJson = jsonResponse.replace(/```json/g, '').replace(/```/g, '').trim();
+                    data = JSON.parse(cleanJson);
+                } catch (e) {
+                    throw new Error("Erro ao processar resposta da IA. Tente novamente.");
+                }
+
+                currentResultData = data; 
+                renderResults(data);
+
+            } catch (error) {
+                console.error(error);
+                errorMsg.innerHTML = `Erro: ${error.message}`;
+                errorMsg.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                loader.classList.add('hidden');
+            }
+        }
+
+        function renderResults(data) {
+            const resultsArea = document.getElementById('resultsArea');
+            const practiceBtn = document.getElementById('practiceBtn');
+            const bonusBtn = document.getElementById('bonusBtn');
+            const detailedSection = document.getElementById('detailedErrorSection');
+            const breakdownList = document.getElementById('errorBreakdownList');
+
+            // Reset
+            breakdownList.innerHTML = '';
+            detailedSection.classList.add('hidden');
+            
+            document.getElementById('displayScore').textContent = data.grammarScore;
+            
+            const originalHtml = data.originalPhraseHtml || data.originalPhrase || "";
+            document.getElementById('originalPhraseContainer').innerHTML = originalHtml;
+            document.getElementById('correctedPhraseContainer').innerHTML = data.correctedPhraseHtml;
+            
+            document.getElementById('feedbackText').innerHTML = data.improvementComment;
+            document.getElementById('grammarTipText').innerHTML = data.grammarTip;
+            document.getElementById('grammarTipSimplifiedText').innerHTML = data.grammarTipSimplified || "Sem dica simplificada.";
+
+            // Render Error Breakdown
+            if (data.errorBreakdown && data.errorBreakdown.length > 0) {
+                detailedSection.classList.remove('hidden');
+                data.errorBreakdown.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = "bg-white/5 p-4 rounded-xl border border-white/10";
+                    
+                    let badgeClass = "bg-slate-500/20 text-slate-300 border-slate-500/50";
+                    if (item.tag.includes("Estrutura Incorreta")) badgeClass = "bg-red-500/20 text-red-300 border-red-500/50";
+                    else if (item.tag.includes("Compreensível")) badgeClass = "bg-orange-500/20 text-orange-300 border-orange-500/50";
+                    else if (item.tag.includes("Pouco Natural")) badgeClass = "bg-blue-500/20 text-blue-300 border-blue-500/50";
+
+                    div.innerHTML = `
+                        <div class="flex items-start justify-between mb-2">
+                            <span class="text-xs font-bold px-3 py-1 rounded-full border ${badgeClass}">${item.tag}</span>
+                        </div>
+                        <div class="flex flex-col md:flex-row gap-2 md:items-center text-sm mb-2">
+                            <span class="text-red-400 line-through decoration-red-400/50 decoration-2">"${item.segment}"</span>
+                            <i class="fas fa-arrow-right text-slate-500 hidden md:block"></i>
+                            <span class="text-green-400 font-bold">"${item.correction}"</span>
+                        </div>
+                        <p class="text-slate-300 text-sm italic border-l-2 border-white/20 pl-3">${item.reason}</p>
+                    `;
+                    breakdownList.appendChild(div);
+                });
+            }
+
+            practiceBtn.classList.add('hidden');
+            bonusBtn.classList.add('hidden');
+
+            if (data.grammarScore === 100 && data.bonusQuestions && data.bonusQuestions.length > 0) {
+                bonusBtn.classList.remove('hidden');
+                bonusBtn.classList.add('flex');
+            } else if (data.quizData && data.quizData.length > 0) {
+                practiceBtn.classList.remove('hidden');
+                practiceBtn.classList.add('flex');
+                practiceBtn.innerHTML = `<i class="fas fa-dumbbell"></i> Praticar ${data.quizData.length} erro(s)`;
+            }
+
+            resultsArea.classList.remove('hidden');
+            setTimeout(() => {
+                resultsArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        // --- PROFICIENCY FEATURES ---
+        function openProficiencyWarning() {
+            const modal = document.getElementById('proficiencyWarningModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+        }
+
+        function closeProficiencyWarning() {
+            const modal = document.getElementById('proficiencyWarningModal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        async function confirmProficiencyAnalysis() {
+            closeProficiencyWarning();
+            
+            const modal = document.getElementById('proficiencyResultModal');
+            const content = document.getElementById('profContent');
+            const loader = document.getElementById('profLoading');
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('translate-y-full'), 10);
+            
+            content.classList.add('hidden');
+            loader.classList.remove('hidden');
+
+            // Preparar dados
+            const q1 = document.getElementById('q1').value.trim();
+            const studentName = document.getElementById('studentName').value.trim();
+            const userPrompt = `Pergunta: ${window.__EC_CURRENT_QUESTION_EN || ''}\nNome: ${studentName}\nFrase para análise rigorosa: ${q1}`;
+
+            try {
+                const jsonResponse = await callGeminiAPI(userPrompt, PROFICIENCY_SYSTEM_PROMPT);
+                
+                let data;
+                try {
+                    const cleanJson = jsonResponse.replace(/```json/g, '').replace(/```/g, '').trim();
+                    data = JSON.parse(cleanJson);
+                } catch (e) { throw new Error("Erro no JSON de proficiência."); }
+
+                renderProficiencyResults(data);
+                loader.classList.add('hidden');
+                content.classList.remove('hidden');
+
+            } catch (error) {
+                alert("Erro na análise de proficiência: " + error.message);
+                closeProficiencyResults();
+            }
+        }
+
+        function renderProficiencyResults(data) {
+            document.getElementById('cefrLevelDisplay').textContent = data.cefrLevel;
+            document.getElementById('cefrDesc').textContent = data.cefrDescription;
+            document.getElementById('bandScoreDisplay').textContent = data.estimatedBandScore;
+            document.getElementById('examinerFeedbackText').textContent = data.examinerFeedback;
+
+            // Renderizar Critérios
+            const list = document.getElementById('criteriaList');
+            list.innerHTML = '';
+
+            data.criteria.forEach(c => {
+                const percent = (c.score / 9) * 100; // Assuming 9.0 max
+                
+                const item = document.createElement('div');
+                item.innerHTML = `
+                    <div class="mb-2 flex justify-between items-end">
+                        <span class="text-white font-bold">${c.name}</span>
+                        <span class="text-brand-cyan font-display font-bold text-xl">${c.score}</span>
+                    </div>
+                    <div class="prof-bar-bg w-full mb-2">
+                        <div class="prof-bar-fill bg-gradient-to-r from-brand-indigo to-brand-purple" style="width: 0%"></div>
+                    </div>
+                    <p class="text-xs text-slate-400 italic">${c.comment}</p>
+                `;
+                list.appendChild(item);
+                
+                setTimeout(() => {
+                    item.querySelector('.prof-bar-fill').style.width = `${percent}%`;
+                }, 100);
+            });
+
+            // ATUALIZADO: Renderizar Seção de Level Up
+            document.getElementById('profBetterVersion').textContent = data.betterVersion || "Não disponível.";
+            document.getElementById('profBetterVersionReason').textContent = data.betterVersionReason || "Não disponível.";
+            
+            const tipsList = document.getElementById('profActionableTips');
+            tipsList.innerHTML = '';
+            if (data.actionableTips && data.actionableTips.length > 0) {
+                data.actionableTips.forEach(tip => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="fas fa-check text-green-400 mr-2"></i> ${tip}`;
+                    tipsList.appendChild(li);
+                });
+            } else {
+                tipsList.innerHTML = '<li class="text-slate-500">Sem dicas extras.</li>';
+            }
+        }
+
+        function closeProficiencyResults() {
+            const modal = document.getElementById('proficiencyResultModal');
+            modal.classList.add('translate-y-full');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        // --- COMMON FUNCTIONS ---
+        function openPracticeModal(isBonus = false) {
+            if (!currentResultData) return;
+            let questionsList = [];
+            const modalTitle = document.getElementById('practiceTitle');
+            const modalSubtitle = document.getElementById('practiceSubtitle');
+
+            if (isBonus) {
+                questionsList = currentResultData.bonusQuestions || [];
+                modalTitle.innerHTML = '<i class="fas fa-trophy text-yellow-400"></i> Desafio de Mestre';
+                modalSubtitle.textContent = 'Parabéns! Você desbloqueou 15 questões bônus para afiar seu inglês.';
+            } else {
+                questionsList = currentResultData.quizData || [];
+                modalTitle.innerHTML = '<i class="fas fa-dumbbell text-brand-gold"></i> Praticar Erros';
+                modalSubtitle.textContent = 'Selecione a palavra correta para preencher o espaço.';
+            }
+
+            if (questionsList.length === 0) return;
+            
+            const modal = document.getElementById('practiceModal');
+            const container = document.getElementById('quizContainer');
+            const feedback = document.getElementById('quizFeedback');
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            
+            feedback.classList.add('hidden');
+            container.innerHTML = '';
+
+            questionsList.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = "bg-black/40 border border-white/10 rounded-xl p-5 mb-4";
+                
+                const title = document.createElement('div');
+                title.className = "text-white text-lg font-medium mb-4 flex flex-col gap-2";
+                
+                if (isBonus) {
+                    title.innerHTML = `<span class="text-xs uppercase tracking-wider text-yellow-500 font-bold mb-1">Questão Bônus ${index+1}</span>`;
+                } else {
+                    title.innerHTML = `<span class="text-xs uppercase tracking-wider text-slate-500 font-bold mb-1">Questão ${index+1}</span>`;
+                }
+                
+                const rawSnippet = isBonus ? item.questionContext : item.contextSnippet;
+                const snippet = rawSnippet || `... _______ ...`;
+                const formattedSnippet = snippet.replace('_______', '<span class="text-brand-cyan border-b-2 border-brand-cyan px-2 mx-1 font-bold">_______</span>');
+                
+                title.innerHTML += `<div class="italic text-slate-200">"${formattedSnippet}"</div>`;
+                
+                if (!isBonus && currentResultData.originalPhraseHtml) {
+                    const toggleId = `toggle-orig-${index}`;
+                    const detailsDiv = document.createElement('div');
+                    detailsDiv.className = "mt-1";
+                    
+                    const toggleBtn = document.createElement('button');
+                    toggleBtn.className = "text-xs text-brand-purple hover:text-brand-cyan underline decoration-dotted underline-offset-4 transition-colors flex items-center gap-1 opacity-80 hover:opacity-100";
+                    toggleBtn.innerHTML = '<i class="fas fa-eye"></i> Ver minha frase original completa';
+                    
+                    const contentDiv = document.createElement('div');
+                    contentDiv.id = toggleId;
+                    contentDiv.className = "hidden mt-3 p-3 bg-white/5 rounded-lg border border-white/5 text-sm text-slate-300 italic animate-fade-in-up";
+                    contentDiv.innerHTML = currentResultData.originalPhraseHtml;
+
+                    toggleBtn.onclick = () => {
+                        const isHidden = contentDiv.classList.contains('hidden');
+                        if (isHidden) {
+                            contentDiv.classList.remove('hidden');
+                            toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Ocultar minha frase original';
+                        } else {
+                            contentDiv.classList.add('hidden');
+                            toggleBtn.innerHTML = '<i class="fas fa-eye"></i> Ver minha frase original completa';
+                        }
+                    };
+                    
+                    detailsDiv.appendChild(toggleBtn);
+                    detailsDiv.appendChild(contentDiv);
+                    title.appendChild(detailsDiv);
+                }
+                
+                card.appendChild(title);
+
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = "grid grid-cols-1 sm:grid-cols-3 gap-3";
+                
+                const shuffledOptions = [...item.options].sort(() => Math.random() - 0.5);
+
+                shuffledOptions.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = "quiz-option py-3 px-4 rounded-lg bg-white/5 border border-white/10 text-slate-200 font-medium hover:bg-white/10 text-sm";
+                    btn.textContent = opt;
+                    const correctVal = isBonus ? item.correctAnswer : item.correctWord;
+                    btn.onclick = () => checkAnswer(btn, opt, correctVal, item.explanation, card);
+                    optionsGrid.appendChild(btn);
+                });
+
+                card.appendChild(optionsGrid);
+                const msgDiv = document.createElement('div');
+                msgDiv.className = "mt-3 text-sm hidden p-3 rounded-lg";
+                msgDiv.id = `msg-${index}`;
+                card.appendChild(msgDiv);
+                container.appendChild(card);
+            });
+        }
+
+        function checkAnswer(btnElement, selectedOption, correctValue, explanation, cardElement) {
+            const isCorrect = selectedOption === correctValue;
+            const msgDiv = cardElement.querySelector('[id^="msg-"]');
+            const allBtns = cardElement.querySelectorAll('button');
+            allBtns.forEach(b => {
+                if (!b.innerHTML.includes('minha frase original')) {
+                    b.disabled = true;
+                    if (b.textContent === correctValue) b.classList.add('correct'); 
+                    else if (b === btnElement && !isCorrect) b.classList.add('wrong'); 
+                    else b.style.opacity = '0.5';
+                }
+            });
+
+            msgDiv.classList.remove('hidden');
+            if (isCorrect) {
+                msgDiv.className = "mt-3 text-sm p-3 rounded-lg bg-green-500/20 text-green-300 border border-green-500/30";
+                msgDiv.innerHTML = `<i class="fas fa-check-circle"></i> <strong>Correto!</strong> ${explanation}`;
+            } else {
+                msgDiv.className = "mt-3 text-sm p-3 rounded-lg bg-red-500/20 text-red-300 border border-red-500/30";
+                msgDiv.innerHTML = `<i class="fas fa-times-circle"></i> <strong>Errou!</strong> A resposta correta é <u>${correctValue}</u>.<br><span class="opacity-80 mt-1 block text-xs">${explanation}</span>`;
+            }
+        }
+
+        function closePractice() {
+            const modal = document.getElementById('practiceModal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function resetApp() { window.location.reload(); }
+
+        // --- MODELO: gemini-3-flash-preview ---
+        async function callGeminiAPI(userText, systemPrompt) {
+            // URL MANTIDA COMO NO ORIGINAL (GEMINI 3.0)
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: userText }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: { responseMimeType: "application/json" }
+            };
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) throw new Error('Falha na API. Verifique sua chave.');
+            const data = await response.json();
+            return data.candidates[0].content.parts[0].text;
+        }
+    </script>
+</body>
+</html>

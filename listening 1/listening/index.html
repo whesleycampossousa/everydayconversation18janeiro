@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Time Management - Learning English</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2C3E50;
+            --secondary-color: #e67e22;
+            --accent-color: #E74C3C;
+            --background-color: #ECF0F1;
+            --text-color: #2C3E50;
+            --header-bg: rgba(44, 62, 80, 0.95);
+            --button-bg: #e67e22;
+            --button-hover-bg: #d35400;
+            --tooltip-bg: rgba(44, 62, 80, 0.9);
+            --tooltip-color: #FFFFFF;
+            --transition-duration: 0.3s;
+            --font-primary: 'Roboto', sans-serif;
+            --font-secondary: 'Roboto Condensed', sans-serif;
+            --correct-color: #2ECC71;
+            --border-color: #BDC3C7;
+            --background-input: #FFFFFF;
+            --highlight-color: #f1c40f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: var(--font-secondary);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .container {
+            padding: 16px;
+            max-width: 1000px;
+            margin: 100px auto 40px auto;
+            padding-bottom: 150px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--header-bg);
+            color: #FFFFFF;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            min-height: 80px;
+        }
+
+        .logo {
+            font-family: var(--font-secondary);
+            font-size: 1.6em;
+            font-weight: 700;
+            text-decoration: none;
+            color: #FFFFFF;
+        }
+
+        .logo-img {
+            height: 50px;
+            margin-left: 20px;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px 15px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #FFFFFF;
+            font-weight: 500;
+            font-size: 0.95em;
+            white-space: nowrap;
+            transition: color var(--transition-duration);
+            cursor: pointer;
+        }
+
+        nav a:hover {
+            color: var(--highlight-color);
+        }
+
+        .main-header {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: var(--primary-color);
+            color: #FFFFFF;
+            margin-top: 80px;
+        }
+
+        .main-header h1 {
+            font-family: var(--font-secondary);
+            font-size: 2.8em;
+            margin-bottom: 10px;
+        }
+
+        .main-header h2 {
+            font-size: 1.6em;
+            font-weight: 400;
+            color: #BDC3C7;
+        }
+
+        section.section {
+            margin-bottom: 30px;
+            background-color: #FFFFFF;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        section.section h2 {
+            font-family: var(--font-secondary);
+            font-size: 2em;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            cursor: pointer;
+            position: relative;
+            text-align: left;
+        }
+
+        .collapsed>.content {
+            display: none;
+        }
+
+        .sentence-audio-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+
+        .play-button {
+            border: none;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .verify-button,
+        .main-button {
+            color: #FFFFFF;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 20px;
+            font-size: 0.95em;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .verify-button {
+            background-color: var(--secondary-color);
+            margin-top: 10px;
+        }
+
+        .main-button {
+            background-color: #3498DB;
+        }
+
+        .student-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            border: 1px solid #CCCCCC;
+            border-radius: 8px;
+            background-color: var(--background-input);
+            font-size: 1em;
+            min-height: 50px;
+            font-family: var(--font-secondary);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .student-input::placeholder {
+            color: #9CA3AF;
+            opacity: 1;
+        }
+
+        .word-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .word-play-button {
+            background-color: #3498DB;
+            color: #FFFFFF;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .word-play-button:hover {
+            transform: scale(1.05);
+            background-color: #2980b9;
+        }
+
+        .play-normal {
+            background-color: #10b981;
+        }
+
+        .play-normal:hover {
+            background-color: #059669;
+        }
+
+        .play-slow {
+            background-color: #a855f7;
+        }
+
+        .play-slow:hover {
+            background-color: #9333ea;
+        }
+
+        .verify-button:hover {
+            background-color: var(--button-hover-bg);
+        }
+
+        .main-button:hover {
+            background-color: #2980b9;
+        }
+
+        .progress-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .progress-step {
+            flex-grow: 1;
+            flex-basis: 50px;
+            text-align: center;
+            padding: 8px 0;
+            background-color: var(--background-input);
+            border: 1px solid var(--border-color);
+            margin: 5px;
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+
+        .progress-step.active {
+            background-color: var(--secondary-color);
+            color: #FFFFFF;
+            font-weight: bold;
+        }
+
+        .progress-step.completed {
+            background-color: var(--correct-color);
+            color: #FFFFFF;
+        }
+
+        .reading-word {
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .active-highlight {
+            background-color: var(--highlight-color) !important;
+            color: black !important;
+            font-weight: bold;
+            transform: scale(1.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .reading-text {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            line-height: 2;
+            margin: 20px 0;
+        }
+
+        .sentence-block {
+            padding: 20px;
+            background-color: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .feedback-details {
+            margin-top: 10px;
+            min-height: 24px;
+        }
+
+        .glossary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .glossary-item {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 4px solid var(--secondary-color);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            background-color: #FFFFFF;
+            border-top: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 text-gray-800 min-h-screen p-4">
+
+    <header id="header">
+        <a href="#" class="logo">Everyday Conversation</a>
+        <div class="flex items-center">
+            <nav>
+                <a href="#text">Atividade</a>
+                <a href="#reading-section">Ritmo</a>
+                <a href="#glossary">Glossário</a>
+                <a href="../../../index.html"
+                    class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2 no-underline font-bold text-sm">
+                    <i class="fas fa-arrow-left"></i> Voltar ao Menu de atividades
+                </a>
+            </nav>
+            <img src="https://imgur.com/cxFsWTK.png" alt="Logo" class="logo-img">
+        </div>
+    </header>
+
+    <div class="main-header">
+        <h1>Everyday Conversation</h1>
+        <h2>Prática de Escuta e Escrita: Time Management</h2>
+    </div>
+
+    <main class="container">
+        <section class="section" id="progress-section">
+            <h2>Progresso da Atividade</h2>
+            <div class="content">
+                <div class="progress-bar">
+                    <div class="progress-step active">1</div>
+                    <div class="progress-step">2</div>
+                    <div class="progress-step">3</div>
+                    <div class="progress-step">4</div>
+                    <div class="progress-step">5</div>
+                    <div class="progress-step">6</div>
+                    <div class="progress-step">7</div>
+                    <div class="progress-step">8</div>
+                    <div class="progress-step">9</div>
+                    <div class="progress-step">10</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="text">
+            <h2>Escute e Escreva as Frases</h2>
+            <div class="content">
+                <!-- Frase 1 -->
+                <div class="sentence-block"
+                    data-correct="Managing time effectively helps reduce pressure and improve daily performance">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold">Frase 1</span>
+                        <span class="text-gray-500 text-xs">⏱️ Gestão do Tempo</span>
+                    </div>
+                    <div class="sentence-audio-controls">
+                        <button class="play-button play-normal"
+                            data-text="Managing time effectively helps reduce pressure and improve daily performance"
+                            data-rate="1">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                class="w-4 h-4 mr-2">
+                                <path fill-rule="evenodd"
+                                    d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
+                                    clip-rule="evenodd" />
+                            </svg>Velocidade Normal
+                        </button>
+                        <button class="play-button play-slow"
+                            data-text="Managing time effectively helps reduce pressure and improve daily performance"
+                            data-rate="0.5">
+                            <i class="fas fa-turtle mr-2"></i>Velocidade Lenta
+                        </button>
+                    </div>
+                    <input type="text" class="student-input" placeholder="✍️ Escreva o que ouviu aqui...">
+                    <div class="word-buttons"></div>
+                    <button class="verify-button">
+                        <i class="fas fa-check-circle mr-2"></i>Verificar Resposta
+                    </button>
+                    <div class="feedback-details"></div>
+                </div>
+
+
+                <!-- Frase 2 -->
+                <div class="sentence-block"
+                    data-correct="In the beginning, many people struggle to organize tasks and priorities">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold">Frase 2</span>
+                        <span class="text-gray-500 text-xs">🧭 Prioridades</span>
+                    </div>
+                    <div class="sentence-audio-controls">
+                        <button class="play-button play-normal"
+                            data-text="In the beginning, many people struggle to organize tasks and priorities"
+                            data-rate="1">
+                            <i class="fas fa-play mr-2"></i>Velocidade Normal
+                        </button>
+                        <button class="play-button play-slow"
+                            data-text="In the beginning, many people struggle to organize tasks and priorities"
+                            data-rate="0.5">
+                            <i class="fas fa-turtle mr-2"></i>Velocidade Lenta
+                        </button>
+                    </div>
+                    <input type="text" class="student-input" placeholder="✍️ Escreva o que ouviu aqui...">
+                    <div class="word-buttons"></div>
+                    <button class="verify-button">
+                        <i class="fas fa-check-circle mr-2"></i>Verificar Resposta
+                    </button>
+                    <div class="feedback-details"></div>
+                </div>
+
+
+                <!-- Frase 3 -->
+                <div class="sentence-block" data-correct="Writing simple to-do lists can bring clarity and direction">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold">Frase 3</span>
+                        <span class="text-gray-500 text-xs">🗒️ Listas Simples</span>
+                    </div>
+                    <div class="sentence-audio-controls">
+                        <button class="play-button play-normal"
+                            data-text="Writing simple to-do lists can bring clarity and direction" data-rate="1">
+                            <i class="fas fa-play mr-2"></i>Velocidade Normal
+                        </button>
+                        <button class="play-button play-slow"
+                            data-text="Writing simple to-do lists can bring clarity and direction" data-rate="0.5">
+                            <i class="fas fa-turtle mr-2"></i>Velocidade Lenta
+                        </button>
+                    </div>
+                    <input type="text" class="student-input" placeholder="✍️ Escreva o que ouviu aqui...">
+                    <div class="word-buttons"></div>
+                    <button class="verify-button">
+                        <i class="fas fa-check-circle mr-2"></i>Verificar Resposta
+                    </button>
+                    <div class="feedback-details"></div>
+                </div>
+
+
+                <!-- Frase 4 -->
+                <div class="sentence-block"
+                    data-correct="Setting clear deadlines helps avoid last-minute stress">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold">Frase 4</span>
+                        <span class="text-gray-500 text-xs">📅 Prazos Claros</span>
+                    </div>
+                    <div class="sentence-audio-controls">
+                        <button class="play-button play-normal"
+                            data-text="Setting clear deadlines helps avoid last-minute stress"
+                            data-rate="1">
+                            <i class="fas fa-play mr-2"></i>Velocidade Normal
+                        </button>
+                        <button class="play-button play-slow"
+                            data-text="Setting clear deadlines helps avoid last-minute stress"
+                            data-rate="0.5">
+                            <i class="fas fa-turtle mr-2"></i>Velocidade Lenta
+                        </button>
+                    </div>
+                    <input type="text" class="student-input" placeholder="✍️ Escreva o que ouviu aqui...">
+                    <div class="word-buttons"></div>
+                    <button class="verify-button">
+                        <i class="fas fa-check-circle mr-2"></i>Verificar Resposta
+                    </button>
+                    <div class="feedback-details"></div>
+                </div>
+
+
+                <!-- Frase 5 -->
+                <div class="sentence-block"
+                    data-correct="Breaks are also important to maintain focus and energy">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold">Frase 5</span>
+                        <span class="text-gray-500 text-xs">☕ Pausas e Energia</span>
+                    </div>
+                    <div class="sentence-audio-controls">
+                        <button class="play-button play-normal"
+                            data-text="Breaks are also important to maintain focus and energy" data-rate="1">
+                            <i class="fas fa-play mr-2"></i>Velocidade Normal
+                        </button>
+                        <button class="play-button play-slow"
+                            data-text="Breaks are also important to maintain focus and energy" data-rate="0.5">
+                            <i class="fas fa-turtle mr-2"></i>Velocidade Lenta
+                        </button>
+                    </div>
+                    <input type="text" class="student-input" placeholder="✍️ Escreva o que ouviu aqui...">
+                    <div class="word-buttons"></div>
+                    <button class="verify-button">
+                        <i class="fas fa-check-circle mr-2"></i>Verificar Resposta
+                    </button>
+                    <div class="feedback-details"></div>
+                </div>
+
+
+                <!-- Frase 6 -->
+                <div class="sentence-block"
+                    data-correct="Overloading schedules often leads to frustration and exhaustion">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold">Frase 6</span>
+                        <span class="text-gray-500 text-xs">⚖️ Agenda Lotada</span>
+                    </div>
+                    <div class="sentence-audio-controls">
+                        <button class="play-button play-normal"
+                            data-text="Overloading schedules often leads to frustration and exhaustion"
+                            data-rate="1">
+                            <i class="fas fa-play mr-2"></i>Velocidade Normal
+                        </button>
+                        <button class="play-button play-slow"
+                            data-text="Overloading schedules often leads to frustration and exhaustion"
+                            data-rate="0.5">
+                            <i class="fas fa-turtle mr-2"></i>Velocidade Lenta
+                        </button>
+                    </div>
+                    <input type="text" class="student-input" placeholder="✍️ Escreva o que ouviu aqui...">
+                    <div class="word-buttons"></div>
+                    <button class="verify-button">
+                        <i class="fas fa-check-circle mr-2"></i>Verificar Resposta
+                    </button>
+                    <div class="feedback-details"></div>
+                </div>
+
+
+                <!-- Frase 7 -->
+                <div class="sentence-block"
+                    data-correct="Learning to say no protects mental health and productivity">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold">Frase 7</span>
+                        <span class="text-gray-500 text-xs">🛡️ Limites Saudáveis</span>
+                    </div>
+                    <div class="sentence-audio-controls">
+                        <button class="play-button play-normal"
+                            data-text="Learning to say no protects mental health and productivity" data-rate="1">
+                            <i class="fas fa-play mr-2"></i>Velocidade Normal
+                        </button>
+                        <button class="play-button play-slow"
+                            data-text="Learning to say no protects mental health and productivity"
+                            data-rate="0.5">
+                            <i class="fas fa-turtle mr-2"></i>Velocidade Lenta
+                        </button>
+                    </div>
+                    <input type="text" class="student-input" placeholder="✍️ Escreva o que ouviu aqui...">
+                    <div class="word-buttons"></div>
+                    <button class="verify-button">
+                        <i class="fas fa-check-circle mr-2"></i>Verificar Resposta
+                    </button>
+                    <div class="feedback-details"></div>
+                </div>
+
+
+                <!-- Frase 8 -->
+                <div class="sentence-block"
+                    data-correct="Digital calendars provide reminders and structure for busy routines">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold">Frase 8</span>
+                        <span class="text-gray-500 text-xs">🗓️ Calendários Digitais</span>
+                    </div>
+                    <div class="sentence-audio-controls">
+                        <button class="play-button play-normal"
+                            data-text="Digital calendars provide reminders and structure for busy routines"
+                            data-rate="1">
+                            <i class="fas fa-play mr-2"></i>Velocidade Normal
+                        </button>
+                        <button class="play-button play-slow"
+                            data-text="Digital calendars provide reminders and structure for busy routines"
+                            data-rate="0.5">
+                            <i class="fas fa-turtle mr-2"></i>Velocidade Lenta
+                        </button>
+                    </div>
+                    <input type="text" class="student-input" placeholder="✍️ Escreva o que ouviu aqui...">
+                    <div class="word-buttons"></div>
+                    <button class="verify-button">
+                        <i class="fas fa-check-circle mr-2"></i>Verificar Resposta
+                    </button>
+                    <div class="feedback-details"></div>
+                </div>
+
+
+                <!-- Frase 9 -->
+                <div class="sentence-block"
+                    data-correct="With practice, planning becomes more natural and efficient">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold">Frase 9</span>
+                        <span class="text-gray-500 text-xs">✅ Planejamento</span>
+                    </div>
+                    <div class="sentence-audio-controls">
+                        <button class="play-button play-normal"
+                            data-text="With practice, planning becomes more natural and efficient"
+                            data-rate="1">
+                            <i class="fas fa-play mr-2"></i>Velocidade Normal
+                        </button>
+                        <button class="play-button play-slow"
+                            data-text="With practice, planning becomes more natural and efficient" data-rate="0.5">
+                            <i class="fas fa-turtle mr-2"></i>Velocidade Lenta
+                        </button>
+                    </div>
+                    <input type="text" class="student-input" placeholder="✍️ Escreva o que ouviu aqui...">
+                    <div class="word-buttons"></div>
+                    <button class="verify-button">
+                        <i class="fas fa-check-circle mr-2"></i>Verificar Resposta
+                    </button>
+                    <div class="feedback-details"></div>
+                </div>
+
+
+                <!-- Frase 10 -->
+                <div class="sentence-block"
+                    data-correct="In the long run, good time management creates balance, confidence, and greater control over personal and professional life">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold">Frase 10</span>
+                        <span class="text-gray-500 text-xs">🎯 Equilíbrio Sustentável</span>
+                    </div>
+                    <div class="sentence-audio-controls">
+                        <button class="play-button play-normal"
+                            data-text="In the long run, good time management creates balance, confidence, and greater control over personal and professional life"
+                            data-rate="1">
+                            <i class="fas fa-play mr-2"></i>Velocidade Normal
+                        </button>
+                        <button class="play-button play-slow"
+                            data-text="In the long run, good time management creates balance, confidence, and greater control over personal and professional life"
+                            data-rate="0.5">
+                            <i class="fas fa-turtle mr-2"></i>Velocidade Lenta
+                        </button>
+                    </div>
+                    <input type="text" class="student-input" placeholder="✍️ Escreva o que ouviu aqui...">
+                    <div class="word-buttons"></div>
+                    <button class="verify-button">
+                        <i class="fas fa-check-circle mr-2"></i>Verificar Resposta
+                    </button>
+                    <div class="feedback-details"></div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="section" id="reading-section">
+            <h2>Leitura Dinâmica (Highlight)</h2>
+            <div class="content">
+                <p class="mb-4">Clique para ler primeiro em <strong>0.8x</strong>, aguarde 3 segundos e repita em
+                    <strong>1.0x</strong>.
+                </p>
+                <div class="flex gap-4 mb-6">
+                    <button id="startHighlightBtn" class="main-button">
+                        <i class="fas fa-play"></i> Iniciar Highlight
+                    </button>
+                    <button id="restartHighlightBtn" class="main-button"
+                        style="background-color: var(--primary-color);">
+                        <i class="fas fa-redo"></i> Reiniciar
+                    </button>
+                </div>
+                <div id="highlight-display"
+                    class="p-8 bg-white border-2 border-dashed border-gray-300 rounded-xl text-2xl leading-relaxed text-center">
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="glossary">
+            <h2>Glossário de Termos (A-Z)</h2>
+            <div class="content">
+                <div id="glossary-list" class="glossary-grid"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2024 Everyday Conversation - Treino Formula 1 Drivers</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const usePreRecordedAudio = true;
+            const trainingText = "Managing time effectively helps reduce pressure and improve daily performance. In the beginning, many people struggle to organize tasks and priorities. Writing simple to-do lists can bring clarity and direction. Setting clear deadlines helps avoid last-minute stress. Breaks are also important to maintain focus and energy. Overloading schedules often leads to frustration and exhaustion. Learning to say no protects mental health and productivity. Digital calendars provide reminders and structure for busy routines. With practice, planning becomes more natural and efficient. In the long run, good time management creates balance, confidence, and greater control over personal and professional life.";
+            const wordsArray = trainingText.split(/\s+/);
+
+            const highlightDisplay = document.getElementById('highlight-display');
+            if (highlightDisplay) highlightDisplay.innerHTML = '';
+            wordsArray.forEach((word, index) => {
+                const span = document.createElement('span');
+                span.className = 'reading-word';
+                span.id = `h-word-${index}`;
+                span.innerText = word + ' ';
+                highlightDisplay.appendChild(span);
+            });
+
+            const glossaryItems = {
+                "Managing": "Gerenciando",
+                "time": "tempo",
+                "effectively": "de forma eficaz",
+                "helps": "ajuda",
+                "reduce": "reduzir",
+                "pressure": "pressão",
+                "improve": "melhorar",
+                "daily": "diário",
+                "performance": "desempenho",
+                "In the beginning": "No começo",
+                "many": "muitas/muitos",
+                "people": "pessoas",
+                "struggle": "têm dificuldade",
+                "to": "para",
+                "organize": "organizar",
+                "tasks": "tarefas",
+                "priorities": "prioridades",
+                "Writing": "Escrever",
+                "simple": "simples",
+                "to-do": "de tarefas",
+                "lists": "listas",
+                "clarity": "clareza",
+                "direction": "direção",
+                "Setting": "Definir",
+                "clear": "claros",
+                "deadlines": "prazos",
+                "last-minute": "de última hora",
+                "stress": "estresse",
+                "Breaks": "Pausas",
+                "also": "também",
+                "important": "importante",
+                "maintain": "manter",
+                "focus": "foco",
+                "energy": "energia",
+                "Overloading": "Sobrecarregar",
+                "schedules": "agendas",
+                "often": "frequentemente",
+                "leads": "leva",
+                "frustration": "frustração",
+                "exhaustion": "esgotamento",
+                "Learning": "Aprender",
+                "say": "dizer",
+                "no": "não",
+                "protects": "protege",
+                "mental": "mental",
+                "health": "saúde",
+                "productivity": "produtividade",
+                "Digital": "Digitais",
+                "calendars": "calendários",
+                "provide": "fornecem",
+                "reminders": "lembretes",
+                "structure": "estrutura",
+                "busy": "corridas/cheias",
+                "routines": "rotinas",
+                "With": "Com",
+                "practice": "prática",
+                "planning": "planejamento",
+                "becomes": "se torna",
+                "more": "mais",
+                "natural": "natural",
+                "efficient": "eficiente",
+                "In the long run": "A longo prazo",
+                "good": "boa",
+                "time management": "gestão do tempo",
+                "creates": "cria",
+                "balance": "equilíbrio",
+                "confidence": "confiança",
+                "greater": "maior",
+                "control": "controle",
+                "personal": "pessoal",
+                "professional": "profissional",
+                "life": "vida"
+            };
+
+            const glossaryContainer = document.getElementById('glossary-list');
+            Object.keys(glossaryItems).sort().forEach(word => {
+                const div = document.createElement('div');
+                div.className = 'glossary-item';
+                div.innerHTML = `<span class="font-bold text-orange-600">${word}:</span> <span>${glossaryItems[word]}</span>`;
+                glossaryContainer.appendChild(div);
+            });
+
+            function speak(text, rate = 1.0, isHighlight = false, onEnd = null) {
+                if (isHighlight) {
+                    // Pre-recorded audio for Leitura Dinâmica (Highlight)
+                    const isSlow = rate <= 0.8;
+                    const audioFile = isSlow ? 'audio/highlight_0_8x.mp3' : 'audio/highlight_1_0x.mp3';
+                    const audio = new Audio(audioFile);
+                    audio.play().catch(e => {
+                        console.warn(`Highlight audio not found: ${audioFile}`, e);
+                        if (onEnd) setTimeout(onEnd, 2000);
+                    });
+                    audio.onended = () => {
+                        if (onEnd) onEnd();
+                    };
+                    return;
+                }
+
+                // Check if it's a known sentence from the blocks
+                const blocks = document.querySelectorAll('.sentence-block');
+                let foundIndex = -1;
+                blocks.forEach((b, i) => {
+                    if (b.getAttribute('data-correct') === text) foundIndex = i;
+                });
+
+                if (foundIndex !== -1) {
+                    playAudioWithFallback(foundIndex, text, rate);
+                } else {
+                    // Word or unknown text
+                    if (!text.includes(' ') && text.trim().length > 0) {
+                        const cleanWord = text.toLowerCase().replace(/[^\w]/g, '');
+                        const audioFilename = `audio/word_${cleanWord}.mp3`;
+
+                        if (!usePreRecordedAudio) {
+                            console.warn("Pre-recorded audio is disabled and TTS is removed.");
+                            return;
+                        }
+                        const audio = new Audio(audioFilename);
+                        audio.play().catch(e => {
+                            console.warn(`Word audio not found: ${audioFilename}`);
+                        });
+                        return;
+                    }
+
+                }
+            }
+
+            function playAudioWithFallback(index, text, rate) {
+                const isSlow = rate < 0.9;
+                const suffix = isSlow ? '_slow' : '';
+                const audioPath = `audio/sentence_${index}${suffix}.mp3`;
+                const audio = new Audio(audioPath);
+
+                audio.play().catch(e => {
+                    console.warn(`Audio file not found for index ${index}: ${audioPath}`);
+                });
+            }
+
+            document.querySelectorAll('.sentence-block').forEach((block, idx) => {
+                const vBtn = block.querySelector('.verify-button');
+                const input = block.querySelector('.student-input');
+                const feedback = block.querySelector('.feedback-details');
+                const correct = block.getAttribute('data-correct');
+
+                const wordContainer = block.querySelector('.word-buttons');
+                if (wordContainer) {
+                    wordContainer.innerHTML = '';
+                    const rawWords = correct.split(/\s+/).filter(Boolean);
+                    rawWords.forEach((w) => {
+                        const cleaned = w
+                            .replace(/^["\"(']+|["\"')]+$/g, '')
+                            .replace(/[.,!?;:]+$/g, '');
+                        if (!cleaned) return;
+
+                        const btn = document.createElement('button');
+                        btn.className = 'word-play-button';
+                        btn.setAttribute('data-word', cleaned);
+                        btn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                        btn.title = 'Ouvir esta palavra';
+                        wordContainer.appendChild(btn);
+                    });
+                }
+
+                block.querySelectorAll('.play-button').forEach(b => b.addEventListener('click', () => speak(b.getAttribute('data-text'), parseFloat(b.getAttribute('data-rate')))));
+                block.querySelectorAll('.word-play-button').forEach(b => b.addEventListener('click', () => speak(b.getAttribute('data-word'), 1)));
+
+                vBtn.addEventListener('click', () => {
+                    if (input.value.trim().toLowerCase().replace(/[.,!]/g, '') === correct.toLowerCase().replace(/[.,!]/g, '')) {
+                        feedback.innerHTML = '<span class="text-green-600 font-bold text-lg"><i class="fas fa-check-circle"></i> Perfeito! Resposta correta!</span>';
+                        input.style.borderColor = '#10b981';
+                        input.style.backgroundColor = '#f0fdf4';
+                        setTimeout(() => {
+                            input.style.borderColor = '';
+                            input.style.backgroundColor = '';
+                        }, 2000);
+                        document.querySelectorAll('.progress-step')[idx].classList.add('completed');
+                        if (document.querySelectorAll('.progress-step')[idx + 1]) document.querySelectorAll('.progress-step')[idx + 1].classList.add('active');
+                    } else {
+                        feedback.innerHTML = `<p class="text-red-500 font-bold"><i class="fas fa-times-circle"></i> Tente novamente ou veja: <span class="italic text-gray-700 bg-yellow-100 px-2 py-1 rounded">${correct}</span></p>`;
+                    }
+                });
+            });
+
+            let hActive = false;
+            const startHBtn = document.getElementById('startHighlightBtn');
+
+            startHBtn.addEventListener('click', () => {
+                if (hActive) {
+                    hActive = false;
+                    startHBtn.innerHTML = '<i class="fas fa-play"></i> Iniciar Highlight';
+                    return;
+                }
+                hActive = true;
+                startHBtn.innerHTML = '<i class="fas fa-pause"></i> Pausar';
+                speak(trainingText, 0.8, true, () => {
+                    if (hActive) speak(trainingText, 1.0, true, () => {
+                        hActive = false;
+                        startHBtn.innerHTML = '<i class="fas fa-play"></i> Iniciar Highlight';
+                    });
+                });
+            });
+
+            document.getElementById('restartHighlightBtn').addEventListener('click', () => {
+                hActive = false;
+                startHBtn.innerHTML = '<i class="fas fa-play"></i> Iniciar Highlight';
+                document.querySelectorAll('.reading-word').forEach(s => s.classList.remove('active-highlight'));
+            });
+
+            document.querySelectorAll('section.section h2').forEach(h => h.addEventListener('click', () => h.parentElement.classList.toggle('collapsed')));
+            if (speechSynthesis.onvoiceschanged !== undefined) { speechSynthesis.onvoiceschanged = getMaleVoice; }
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Everyday Conversation - Central de Atividades</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Outfit:wght@500;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Login Screen */
+        #login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(2, 6, 23, 0.98);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        #login-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .login-box {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 48px 40px;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            display: block;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            text-align: center;
+            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+
+        .login-subtitle {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-bottom: 32px;
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-label {
+            display: block;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #60a5fa;
+            background: rgba(96, 165, 250, 0.05);
+            box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(96, 165, 250, 0.4);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(96, 165, 250, 0.6);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #main-content {
+            display: none;
+        }
+
+        #main-content.visible {
+            display: block;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #020617;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: #f8fafc;
+            padding: 40px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .logo {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 24px;
+            border-radius: 24px;
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                0 20px 40px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .current-date {
+            font-size: 0.9rem;
+            color: #38bdf8;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+            text-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #f472b6 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #64748b;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .activities {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .activity-card {
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.6) 100%);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 24px 32px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+            text-decoration: none;
+            display: block;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .activity-card:hover {
+            transform: translateY(-4px) scale(1.01);
+            background: linear-gradient(180deg, rgba(51, 65, 85, 0.8) 0%, rgba(30, 41, 59, 0.7) 100%);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.05),
+                0 20px 40px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .activity-content {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .activity-icon-container {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            flex-shrink: 0;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.4));
+            border-radius: 20px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Individual Icons */
+        .icon-writing {
+            background-image: url('media/icon_writing.png');
+        }
+
+        .icon-listening {
+            background-image: url('media/icon_headphones.png');
+        }
+
+        .icon-video {
+            background-image: url('media/icon_play.png');
+        }
+
+        .icon-pronunciation {
+            background-image: url('media/icon_mic.png');
+        }
+
+        .icon-translation {
+            background-image: url('media/icon_globe.png');
+        }
+
+        .icon-verbs {
+            background-image: url('media/icon_verbs.png');
+        }
+
+        .optional-message {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin: 32px 0 16px 0;
+            padding: 16px 24px;
+            background: rgba(139, 92, 246, 0.1);
+            border-left: 3px solid #a78bfa;
+            border-radius: 12px;
+            font-style: italic;
+            animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+            animation-delay: 0.35s;
+        }
+
+        .activity-card:hover .activity-icon-container {
+            transform: scale(1.15) rotate(3deg) translateY(-2px);
+            filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.5));
+        }
+
+        .activity-info {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #fff;
+            letter-spacing: 0.01em;
+        }
+
+        .activity-description {
+            font-size: 0.95rem;
+            color: #94a3b8;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        .activity-arrow {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.4);
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .activity-card:hover .activity-arrow {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transform: translateX(4px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Staggered Animation Delays */
+        .activity-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .activity-card:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .activity-card:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .activity-card:nth-child(4) {
+            animation-delay: 0.25s;
+        }
+
+        .activity-card:nth-child(5) {
+            animation-delay: 0.3s;
+        }
+
+        .activity-card:nth-child(6) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .subtitle {
+                font-size: 0.9rem;
+            }
+
+            .activity-card {
+                padding: 20px;
+            }
+
+            .activity-title {
+                font-size: 1.2rem;
+            }
+
+            .activity-icon-container {
+                width: 56px;
+                height: 56px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <div class="login-box">
+            <img src="https://i.imgur.com/cxFsWTK.webp" alt="Logo" class="login-logo">
+            <h1 class="login-title">Bem-vindo!</h1>
+            <p class="login-subtitle">Digite seu email para um melhor acompanhamento da Equipe Everyday Conversation</p>
+
+            <form id="login-form">
+                <div class="input-group">
+                    <label class="input-label" for="user-email">
+                        <i class="fas fa-envelope" style="margin-right: 8px;"></i>Email
+                    </label>
+                    <input type="email" id="user-email" class="input-field" placeholder="seu@email.com" required
+                        autocomplete="email">
+                </div>
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i>Entrar
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content">
+        <div class="container">
+            <div class="header">
+                <div class="flex justify-between items-center w-full mb-8">
+                    <a href="../../../index.html"
+                        class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2 no-underline font-bold text-sm">
+                        <i class="fas fa-arrow-left"></i> Voltar ao Menu Principal
+                    </a>
+                </div>
+                <img src="https://i.imgur.com/cxFsWTK.webp" alt="Everyday Conversation" class="logo">
+                <div id="currentDate" class="current-date"></div>
+                <h1>Curso de Inglês</h1>
+                <h2>Everyday Conversation</h2>
+                <p class="subtitle">Central de Atividades do Whatsapp</p>
+            </div>
+
+            <div class="activities">
+                <!-- Atividade 1: Escrita e Gramática -->
+                <a href="https://everydayconversationatividade3.netlify.app/" class="activity-card group">
+                    <div class="activity-content">
+                        <div class="activity-icon-container icon-writing">
+                            <!-- Placeholder Realista: Notebook/Pen 3D -->
+                        </div>
+                        <div class="activity-info">
+                            <h2 class="activity-title text-amber-400">Escrita e Gramática</h2>
+                            <p class="activity-description">Pratique sua escrita e receba correção detalhada e
+                                instantânea
+                                com IA</p>
+                        </div>
+                        <div class="activity-arrow"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </a>
+
+                <!-- Atividade 2: Tradução -->
+                <a href="tradução/substituição atividade santiago/index.html" class="activity-card group">
+                    <div class="activity-content">
+                        <div class="activity-icon-container icon-translation">
+                            <!-- Placeholder Realista: Globe/Translate 3D -->
+                        </div>
+                        <div class="activity-info">
+                            <h2 class="activity-title text-emerald-400">Tradução</h2>
+                            <p class="activity-description">The Learning Process: Traduza o texto completo e
+                                expanda seu vocabulário</p>
+                        </div>
+                        <div class="activity-arrow"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </a>
+
+                <!-- Atividade 3: Listening 1 -->
+                <a href="listening 1/listening/index.html" class="activity-card group">
+                    <div class="activity-content">
+                        <div class="activity-icon-container icon-listening">
+                            <!-- Placeholder Realista: Blue Duo Headphones 3D -->
+                        </div>
+                        <div class="activity-info">
+                            <h2 class="activity-title text-blue-400">Listening 1</h2>
+                            <p class="activity-description">The Learning Process: Escute o texto e escreva as
+                                frases</p>
+                        </div>
+                        <div class="activity-arrow"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </a>
+
+                <!-- Atividade 4: Pronúncia -->
+                <a href="pronuncia/nova atividade pronuncia 1 5/index.html" class="activity-card group">
+                    <div class="activity-content">
+                        <div class="activity-icon-container icon-pronunciation">
+                            <!-- Placeholder Realista: Mic 3D -->
+                        </div>
+                        <div class="activity-info">
+                            <h2 class="activity-title text-pink-400">Pronúncia</h2>
+                            <p class="activity-description">The Learning Process: Grave sua leitura e compare
+                                sua pronúncia</p>
+                        </div>
+                        <div class="activity-arrow"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </a>
+
+                <!-- Atividade 5: Listening 2 -->
+                <a href="listening 2/index.html" class="activity-card group">
+                    <div class="activity-content">
+                        <div class="activity-icon-container icon-video">
+                            <!-- Placeholder Realista: Video Play 3D -->
+                        </div>
+                        <div class="activity-info">
+                            <h2 class="activity-title text-purple-400">Listening 2</h2>
+                            <p class="activity-description">Preencha as lacunas enquanto assiste ao vídeo com sincronia
+                            </p>
+                        </div>
+                        <div class="activity-arrow"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </a>
+
+                <!-- Mensagem Informativa -->
+                <div class="optional-message">
+                    A atividade abaixo não precisa ser feita diariamente, faça sempre que quiser e puder.
+                </div>
+
+                <!-- Atividade 6: Treinador de Verbos -->
+                <a href="https://everydayconversationtemposverbais.vercel.app" target="_blank"
+                    class="activity-card group">
+                    <div class="activity-content">
+                        <div class="activity-icon-container icon-verbs">
+                            <!-- Placeholder Realista: Verbs Icon 3D -->
+                        </div>
+                        <div class="activity-info">
+                            <h2 class="activity-title text-indigo-400">Treinador de Verbos</h2>
+                            <p class="activity-description">Pratique os tempos verbais (passado, presente, futuro) com
+                                repetição espaçada
+                            </p>
+                        </div>
+                        <div class="activity-arrow"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- LOGIN SYSTEM ---
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyGTg3kESB_1gaZ2d-dj8omj8kQJoCNj9a7ptVDh4Bp1S73MGCaibVCRTo4GIGTed1WaA/exec';
+
+        // Função para verificar se passou das 20h desde o último login
+        function isLoginExpired() {
+            const lastLoginDate = localStorage.getItem('loginDate');
+            const lastLoginPeriod = localStorage.getItem('loginPeriod'); // 'morning' ou 'evening'
+
+            if (!lastLoginDate) return true; // Nunca logou
+
+            const now = new Date();
+            const today = now.toDateString();
+            const currentHour = now.getHours();
+            const currentPeriod = currentHour >= 20 ? 'evening' : 'morning';
+
+            // Se é um dia diferente, expirou
+            if (lastLoginDate !== today) return true;
+
+            // Se é o mesmo dia mas mudou de período (manhã->noite), expirou
+            if (lastLoginPeriod === 'morning' && currentPeriod === 'evening') return true;
+
+            return false;
+        }
+
+        // Verificar se precisa fazer login
+        window.addEventListener('DOMContentLoaded', () => {
+            if (!isLoginExpired()) {
+                // Login ainda válido, mostrar conteúdo
+                showMainContent();
+            }
+            // Se expirou, mostra a tela de login (já é o estado padrão)
+        });
+
+        // Handler do formulário de login
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const emailInput = document.getElementById('user-email');
+            const email = emailInput.value.trim();
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+
+            if (!email) return;
+
+            // Desabilitar botão
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i>Entrando...';
+
+            try {
+                // Bloco try principal
+                // Verificar se deve enviar para planilha (novo período = novo envio)
+                const now = new Date();
+                const today = now.toDateString();
+                const currentHour = now.getHours();
+                const currentPeriod = currentHour >= 20 ? 'evening' : 'morning';
+
+                const lastEmail = localStorage.getItem('lastEmailSent');
+                const lastSentDate = localStorage.getItem('lastSentDate');
+                const lastSentPeriod = localStorage.getItem('lastSentPeriod');
+
+                let shouldSendToSheet = true;
+
+                // Não envia se for o mesmo email, mesma data e mesmo período
+                if (lastEmail === email && lastSentDate === today && lastSentPeriod === currentPeriod) {
+                    shouldSendToSheet = false;
+                    console.log('Login repetido no mesmo período. Não enviando para planilha.');
+                }
+
+                // Salvar dados de login (data e período)
+                localStorage.setItem('loginDate', today);
+                localStorage.setItem('loginPeriod', currentPeriod);
+                localStorage.setItem('userEmail', email);
+
+                // Se vai enviar, salvar também os dados de envio
+                if (shouldSendToSheet) {
+                    localStorage.setItem('lastEmailSent', email);
+                    localStorage.setItem('lastSentDate', today);
+                    localStorage.setItem('lastSentPeriod', currentPeriod);
+                }
+
+                // Enviar para Google Sheets usando GET (mais confiável e sem CORS)
+                if (shouldSendToSheet && GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL.includes('script.google.com')) {
+                    const params = new URLSearchParams({
+                        email: email,
+                        timestamp: new Date().toISOString(),
+                        action: 'login'
+                    });
+
+                    // Usar uma imagem para fazer GET sem problemas de CORS
+                    const img = new Image();
+                    img.src = GOOGLE_SCRIPT_URL + '?' + params.toString();
+
+                    console.log('Dados enviados para planilha via GET');
+                }
+
+                // Mostrar conteúdo principal
+                setTimeout(() => {
+                    showMainContent();
+                }, 500);
+
+            } catch (error) {
+                console.error('Erro ao fazer login:', error);
+                // Mesmo com erro, permitir acesso
+                showMainContent();
+            }
+        });
+
+        function showMainContent() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('main-content').classList.add('visible');
+            updateDate();
+        }
+
+        // Exibir data atual
+        function updateDate() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            const dateStr = now.toLocaleDateString('pt-BR', options);
+            document.getElementById('currentDate').textContent = dateStr;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
+    <title>Listening Practice - Don't Always Say You're Welcome</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@500;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        const trainingText = "Knowing another language makes communication easier. At first, many people feel nervous about making errors, but native speakers usually appreciate your attempts to speak. When words fail, body language helps convey meaning. Reading newspapers is a great way to gradually improve vocabulary and cultural understanding. Grammar rules often seem complicated at first glance, however, practice transforms these difficult concepts into natural habits. Joining conversation groups provides valuable real world experience. Today, technology offers countless resources for independent learners, such as podcasts that teach authentic pronunciation. Keep a journal to track your improvement every week. Ultimately, mastering multiple linguistic systems increases your cognitive flexibility.";
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Outfit', 'sans-serif'] },
+                    colors: { brand: { gold: '#fbbf24', purple: '#7c3aed' } },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'fade-in': 'fadeIn 0.5s ease-out forwards'
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --primary-color: #fbbf24;
+            --secondary-color: #7c3aed;
+            --background-color: #020617;
+            --text-color: #f1f5f9;
+        }
+
+        body {
+            background-color: #020617;
+            background-image: radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%);
+            background-attachment: fixed;
+            color: #f1f5f9;
+            min-height: 100vh;
+            padding-bottom: 40px;
+            overflow-x: hidden;
+        }
+
+        /* LAYERS Z-INDEX */
+        #intro-screen {
+            z-index: 100;
+        }
+
+        #setup-screen {
+            z-index: 90;
+        }
+
+        #main-app {
+            z-index: 1;
+        }
+
+        .overlay-screen {
+            background: rgba(2, 6, 23, 0.98);
+            backdrop-filter: blur(20px);
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- CUSTOM SCROLLBAR --- */
+        .custom-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        /* --- STYLING FOR SYNC & GAPS --- */
+        .gap-input {
+            background: rgba(0, 0, 0, 0.3);
+            border: none;
+            border-bottom: 3px solid #64748b;
+            color: #fbbf24;
+            text-align: center;
+            min-width: 60px;
+            width: auto;
+            max-width: 140px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.1em;
+            transition: all 0.2s ease;
+            padding: 4px 2px;
+            border-radius: 4px 4px 0 0;
+            margin-bottom: 6px;
+            display: inline-block;
+        }
+
+        .gap-input:focus {
+            outline: none;
+            border-bottom-color: #fbbf24;
+            background: rgba(251, 191, 36, 0.1);
+        }
+
+        .gap-select {
+            background: #1e293b;
+            border: 2px solid #475569;
+            color: #fff;
+            padding: 4px 8px;
+            margin-bottom: 6px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .gap-select:focus {
+            border-color: #fbbf24;
+            outline: none;
+        }
+
+        /* Highlight Classes for Sync */
+        .word-span {
+            transition: color 0.1s ease, text-shadow 0.1s ease, opacity 0.3s;
+            border-radius: 4px;
+            padding: 0 1px;
+            display: inline-block;
+        }
+
+        /* O estilo "Gold" para a palavra que está sendo dita agora */
+        .active-word {
+            color: #fbbf24 !important;
+            /* Gold */
+            text-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
+            font-weight: 700;
+            transform: scale(1.05);
+        }
+
+        /* Se a palavra ativa for um input, não mudamos o texto, apenas o estilo da caixa */
+        input.active-word,
+        select.active-word {
+            border-bottom-color: #fbbf24 !important;
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.2);
+            background: rgba(251, 191, 36, 0.05);
+            color: #fbbf24 !important;
+            /* Mantém o texto que o usuário digita visível */
+        }
+
+        /* Translation Text Styling */
+        #portuguese-content {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.35rem;
+            line-height: 2.2;
+            color: #cbd5e1;
+            width: 100%;
+        }
+
+        #portuguese-content .active-word {
+            color: #60a5fa !important;
+            /* Azul claro para diferenciar da atividade */
+            text-shadow: 0 0 15px rgba(96, 165, 250, 0.6);
+            font-weight: 700;
+        }
+
+        .correct {
+            color: #4ade80 !important;
+            border-bottom-color: #4ade80 !important;
+            border-color: #4ade80 !important;
+        }
+
+        .incorrect {
+            color: #f87171 !important;
+            border-bottom-color: #f87171 !important;
+            border-color: #f87171 !important;
+        }
+
+        .speed-btn.active {
+            background-color: #fbbf24;
+            color: black;
+            font-weight: bold;
+            border-color: #fbbf24;
+        }
+
+        .key-hint {
+            display: inline-block;
+            padding: 2px 6px;
+            border: 1px solid #475569;
+            border-radius: 4px;
+            background: #1e293b;
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            margin: 0 2px;
+            font-family: monospace;
+        }
+
+        /* Barra Mobile Fixa */
+        .mobile-controls {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 1);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 12px;
+            z-index: 9999;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .mobile-controls.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .rewind-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .rewind-btn:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .mode-option {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mode-option.selected {
+            background: rgba(124, 58, 237, 0.2);
+            /* Purple tint */
+            border-color: #7c3aed;
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-controls.show {
+                display: flex;
+            }
+
+            .desktop-hints {
+                display: none;
+            }
+
+            #game-area {
+                font-size: 1.15rem;
+                line-height: 2.5;
+                height: 350px !important;
+            }
+
+            .gap-input {
+                width: 90px;
+            }
+
+            #game-container-wrapper {
+                padding-bottom: 120px;
+            }
+        }
+    </style>
+</head>
+
+<body class="flex flex-col items-center p-4">
+
+    <div id="intro-screen"
+        class="overlay-screen fixed inset-0 flex items-center justify-center p-6 transition-opacity duration-500 overflow-y-auto">
+        <button onclick="toggleLanguage()"
+            class="lang-toggle-btn absolute top-6 right-6 text-sm font-bold text-white bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full border border-white/10 transition-colors z-[110]">
+            EN
+        </button>
+
+        <div class="max-w-lg w-full text-center relative animate-fade-in">
+            <img src="https://i.imgur.com/cxFsWTK.webp" class="w-16 h-16 rounded-xl mx-auto mb-6 shadow-2xl" alt="Logo">
+
+            <h1 class="text-3xl md:text-5xl font-display font-black text-white mb-2">Listening <span
+                    class="text-yellow-400">Mastery</span></h1>
+
+            <div class="space-y-4 text-left bg-white/5 p-6 rounded-2xl border border-white/10 mb-8 mt-8">
+                <h3 class="font-bold text-white mb-2 border-b border-white/10 pb-2" data-t="how_it_works">Como funciona:
+                </h3>
+                <p class="text-sm text-gray-400 mb-2" data-t="step1">
+                    1. Configure seu estilo de treino.
+                </p>
+                <p class="text-sm text-gray-400 mb-2" data-t="step2">
+                    2. Preencha as palavras enquanto assiste.
+                </p>
+                <p class="text-sm text-gray-400 mb-2" data-t="step3">
+                    3. Use <b>Espaço</b> para navegar rapidamente.
+                </p>
+                <p class="text-sm text-yellow-400 mt-4 pt-4 border-t border-white/10 font-semibold" data-t="speed_hint">
+                    <i class="fas fa-tachometer-alt mr-2"></i> Dica: Ajuste a velocidade do vídeo como desejar!
+                </p>
+            </div>
+
+            <button onclick="goToSetup()"
+                class="w-full py-4 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-lg shadow-lg hover:scale-[1.02] transition-transform"
+                data-t="start_btn">
+                Começar
+            </button>
+        </div>
+    </div>
+
+    <div id="setup-screen"
+        class="overlay-screen fixed inset-0 flex items-center justify-center p-6 transition-opacity duration-500 overflow-y-auto hidden">
+        <div class="max-w-lg w-full relative">
+
+            <h2 class="text-2xl md:text-3xl font-display font-bold text-white mb-6 text-center" data-t="setup_title">
+                Configuração do Treino</h2>
+
+            <p class="text-center text-gray-400 text-sm mb-6 px-4" data-t="setup_desc">
+                Escolha abaixo como você prefere ser desafiado. Digitar treina sua escrita exata, enquanto Escolher foca
+                na compreensão auditiva rápida.
+            </p>
+
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-6 mb-6">
+                <h3 class="text-sm font-bold text-gray-400 uppercase mb-4" data-t="style_label">1. Escolha seu Estilo
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="mode-option selected p-4 rounded-xl border border-white/20 bg-black/40 hover:bg-white/5"
+                        onclick="selectMode('manual', this)">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i class="fas fa-keyboard text-yellow-400 text-xl"></i>
+                            <span class="font-bold text-white" data-t="mode_manual_title">Digitar</span>
+                        </div>
+                        <p class="text-xs text-gray-400 leading-relaxed" data-t="mode_manual_desc">
+                            Desafio total. Escute e escreva a palavra exata.
+                        </p>
+                    </div>
+
+                    <div class="mode-option p-4 rounded-xl border border-white/20 bg-black/40 hover:bg-white/5"
+                        onclick="selectMode('choice', this)">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i class="fas fa-list text-green-400 text-xl"></i>
+                            <span class="font-bold text-white" data-t="mode_choice_title">Escolher</span>
+                        </div>
+                        <p class="text-xs text-gray-400 leading-relaxed" data-t="mode_choice_desc">
+                            Mais fácil. Selecione a opção correta da lista.
+                        </p>
+                    </div>
+                </div>
+                <input type="hidden" id="selected-mode" value="manual">
+            </div>
+
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-6 mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-bold text-gray-400 uppercase" data-t="difficulty_label">2. Nível de
+                        Dificuldade</h3>
+                    <span id="diffDisplay" class="text-yellow-400 font-bold text-lg">50%</span>
+                </div>
+                <input type="range" id="setup-difficulty" min="10" max="100" step="10" value="50"
+                    class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-500 mb-2">
+                <p class="text-xs text-gray-500 text-center" data-t="difficulty_hint">Define quantas palavras serão
+                    removidas do texto.</p>
+            </div>
+
+            <button onclick="finishSetup()"
+                class="w-full py-4 rounded-full bg-white text-black font-black text-lg shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-[1.02] transition-transform flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                    <path fill-rule="evenodd"
+                        d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
+                        clip-rule="evenodd" />
+                </svg>
+                <span data-t="generate_play_btn">GERAR E INICIAR</span>
+            </button>
+
+            <button onclick="backToIntro()"
+                class="w-full mt-4 py-2 text-sm text-gray-500 hover:text-white transition-colors">
+                Voltar
+            </button>
+        </div>
+    </div>
+
+    <div id="main-app" class="hidden w-full flex flex-col items-center">
+        <nav class="w-full max-w-6xl flex justify-between items-center py-4 mb-4 border-b border-white/10">
+            <div class="flex items-center gap-3">
+                <img src="https://i.imgur.com/cxFsWTK.webp" class="w-8 h-8 rounded-md" alt="Logo">
+                <span class="font-display font-bold text-gray-300 hidden md:block">Everyday Conversation</span>
+            </div>
+
+            <div class="flex gap-3">
+                <a href="../../../index.html"
+                    class="flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-white transition-colors bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-full border border-white/10">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </a>
+                <button onclick="toggleLanguage()"
+                    class="lang-toggle-btn text-xs font-bold text-white bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full border border-white/10 transition-colors">
+                    EN
+                </button>
+                <button onclick="restartSetup()"
+                    class="text-xs text-gray-400 bg-white/5 px-3 py-1 rounded-full border border-white/10 hover:bg-white/10 transition">
+                    <i class="fas fa-cog mr-1"></i><span data-t="config_btn">Configurar</span>
+                </button>
+            </div>
+        </nav>
+
+        <div class="w-full max-w-6xl grid lg:grid-cols-12 gap-6">
+
+            <div class="lg:col-span-5 space-y-4">
+                <div class="rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-black relative z-10">
+                    <video id="mainVideo" controls="" class="w-full h-auto" playsinline="">
+                        <source src="0117.mp4" type="video/mp4">
+                        Seu navegador não suporta vídeos.
+                    </video>
+                </div>
+
+                <div class="glass-panel p-3 rounded-xl flex flex-col gap-3">
+                    <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                        <span class="text-xs font-bold text-gray-400 uppercase" data-t="back_label">Voltar:</span>
+                        <div class="flex gap-2">
+                            <button class="rewind-btn hover:bg-purple-600 hover:border-purple-500"
+                                onclick="rewindVideo(3)">
+                                <i class="fas fa-undo-alt mr-1"></i> 3s
+                            </button>
+                            <button class="rewind-btn hover:bg-purple-600 hover:border-purple-500"
+                                onclick="rewindVideo(5)">
+                                <i class="fas fa-undo-alt mr-1"></i> 5s
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-gray-400 uppercase" data-t="speed_label">Velocidade:</span>
+                        <div class="flex gap-2">
+                            <button
+                                class="speed-btn px-2 py-1 rounded border border-white/20 text-gray-300 text-xs hover:bg-white/10 transition"
+                                onclick="setSpeed(0.5, this)">0.5x</button>
+                            <button
+                                class="speed-btn px-2 py-1 rounded border border-white/20 text-gray-300 text-xs hover:bg-white/10 transition"
+                                onclick="setSpeed(0.75, this)">0.75x</button>
+                            <button
+                                class="speed-btn px-2 py-1 rounded border border-white/20 text-gray-300 text-xs hover:bg-white/10 transition active"
+                                onclick="setSpeed(1.0, this)">1x</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
+                    <p class="text-xs text-blue-200 text-center">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        <span data-t="game_active_hint">Atividade ativa! Use os controles acima para auxiliar sua
+                            escuta.</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="lg:col-span-7" id="game-container-wrapper">
+                <div id="game-container" class="opacity-0 transition-all duration-500 pb-4">
+                    <div class="glass-panel rounded-2xl border border-white/20 overflow-hidden relative flex flex-col">
+
+                        <div
+                            class="bg-white/5 p-3 border-b border-white/10 flex justify-between items-center flex-none z-30">
+                            <div class="desktop-hints flex items-center gap-4 text-xs text-gray-400 w-full">
+                                <span><span class="key-hint" data-t="key_space">ESPAÇO</span> <span
+                                        data-t="next_word">Próxima Palavra</span></span>
+
+                                <div
+                                    class="flex items-center gap-2 px-3 py-1 rounded bg-white/10 border border-white/20 ml-auto mr-4 shadow-sm">
+                                    <span class="key-hint font-bold text-yellow-400 border-yellow-400/50">ESC</span>
+                                    <span
+                                        class="font-bold text-gray-200 text-[10px] md:text-xs uppercase tracking-wide">Pausar
+                                        Vídeo</span>
+                                </div>
+                            </div>
+                            <span id="current-mode-badge"
+                                class="text-xs font-bold text-gray-500 border border-white/10 px-2 py-1 rounded bg-black/30">MANUAL</span>
+                        </div>
+
+                        <div id="game-area"
+                            class="custom-scroll p-6 text-lg md:text-xl leading-[2.8] text-white font-medium text-justify relative overflow-y-auto h-[400px]">
+
+                            <div id="english-content" class="transition-opacity duration-300"></div>
+
+                            <div id="portuguese-content" class="hidden text-justify rounded-lg"></div>
+
+                        </div>
+
+                        <div
+                            class="p-4 bg-black/20 border-t border-white/10 flex flex-col items-center gap-4 relative z-30 flex-none">
+                            <div class="flex flex-col md:flex-row gap-4 w-full justify-center">
+                                <button id="solveBtn"
+                                    class="px-8 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg shadow-lg w-full md:w-auto transition-colors">
+                                    <i class="fas fa-eye mr-2"></i> <span data-t="solve_btn">Ver Resposta</span>
+                                </button>
+
+                                <button id="checkBtn"
+                                    class="px-8 py-3 rounded-full bg-green-500 hover:bg-green-600 text-white font-bold text-lg shadow-lg w-full md:w-auto transition-colors">
+                                    <i class="fas fa-check mr-2"></i> <span data-t="check_btn">Corrigir</span>
+                                </button>
+                            </div>
+
+                            <button id="translateBtn"
+                                class="mt-2 flex items-center gap-2 px-6 py-2 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 text-gray-300 transition-all hover:text-white group">
+                                <i class="fas fa-language text-blue-400 group-hover:scale-110 transition-transform"></i>
+                                <span data-t="translate_btn">Ver Tradução</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mobileControlsBar" class="mobile-controls">
+        <div class="flex gap-3">
+            <button class="rewind-btn no-steal" data-action="rewind5">-5s</button>
+            <button class="rewind-btn no-steal" data-action="rewind3">-3s</button>
+        </div>
+
+        <div class="flex gap-3">
+            <button
+                class="text-white w-14 h-14 rounded-full bg-blue-600 shadow-lg flex items-center justify-center active:scale-95 transition no-steal"
+                data-action="play">
+                <i id="mobilePlayIcon" class="fas fa-play ml-1 pointer-events-none"></i>
+            </button>
+            <button
+                class="text-white w-12 h-12 rounded-full bg-white/10 flex items-center justify-center active:bg-white/20 no-steal"
+                data-action="focus">
+                <i class="fas fa-keyboard pointer-events-none"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- TRANSLATION DICTIONARY ---
+        const translations = {
+            pt: {
+                how_it_works: "Como funciona:",
+                step1: "1. Escolha o modo (Digitar ou Escolher).",
+                step2: "2. Defina a dificuldade e gere a atividade.",
+                step3: "3. Assista ao vídeo e preencha as lacunas.",
+                speed_hint: "Dica: Ajuste a velocidade do vídeo como desejar!",
+                start_btn: "Começar",
+
+                // Setup Screen
+                setup_title: "Configuração do Treino",
+                setup_desc: "Escolha abaixo como você prefere ser desafiado. Digitar treina sua escrita exata, enquanto Escolher foca na compreensão auditiva rápida.",
+                style_label: "1. Escolha seu Estilo",
+                mode_manual_title: "Digitar",
+                mode_manual_desc: "Desafio total. Escute e escreva a palavra exata.",
+                mode_choice_title: "Escolher",
+                mode_choice_desc: "Mais fácil. Selecione a opção correta da lista.",
+                difficulty_label: "2. Nível de Dificuldade",
+                difficulty_hint: "Define a porcentagem de palavras ocultas.",
+                generate_play_btn: "GERAR E INICIAR",
+
+                // Main App
+                config_btn: "Reiniciar",
+                back_label: "Voltar:",
+                speed_label: "Velocidade:",
+                game_active_hint: "Atividade ativa! Use os controles acima para auxiliar sua escuta.",
+                solve_btn: "Ver Resposta",
+                check_btn: "Corrigir",
+                check_btn_perfect: "🎉 Perfeito!",
+                check_btn_error: "Erros",
+                confirm_solve: "Tem certeza que quer ver todas as respostas?",
+                key_space: "ESPAÇO",
+                next_word: "Próxima Palavra",
+                translate_btn: "Ver Tradução",
+                translate_btn_back: "Voltar para o Exercício"
+            },
+            en: {
+                how_it_works: "How it works:",
+                step1: "1. Choose mode (Type or Choose).",
+                step2: "2. Set difficulty and generate activity.",
+                step3: "3. Watch video and fill in the blanks.",
+                speed_hint: "Tip: Adjust video speed as you wish!",
+                start_btn: "Start",
+
+                setup_title: "Practice Setup",
+                setup_desc: "Choose below how you prefer to be challenged. Type trains exact spelling, while Choose focuses on quick listening comprehension.",
+                style_label: "1. Choose your Style",
+                mode_manual_title: "Type",
+                mode_manual_desc: "Full challenge. Listen and write the exact word.",
+                mode_choice_title: "Choose",
+                mode_choice_desc: "Easier. Select the correct option from a list.",
+                difficulty_label: "2. Difficulty Level",
+                difficulty_hint: "Defines the percentage of hidden words.",
+                generate_play_btn: "GENERATE & START",
+
+                config_btn: "Restart",
+                back_label: "Rewind:",
+                speed_label: "Speed:",
+                game_active_hint: "Activity active! Use controls above to help you listen.",
+                solve_btn: "See Answer",
+                check_btn: "Check",
+                check_btn_perfect: "🎉 Perfect!",
+                check_btn_error: "Errors",
+                confirm_solve: "Are you sure you want to reveal all answers?",
+                key_space: "SPACE",
+                next_word: "Next Word",
+                translate_btn: "See Translation",
+                translate_btn_back: "Back to Exercise"
+            }
+        };
+
+        let currentLang = 'pt';
+        let isTranslateMode = false;
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'pt' ? 'en' : 'pt';
+            const btnText = currentLang === 'pt' ? 'EN' : 'PT';
+            document.querySelectorAll('.lang-toggle-btn').forEach(btn => btn.innerText = btnText);
+            document.documentElement.lang = currentLang === 'pt' ? 'pt-BR' : 'en-US';
+
+            document.querySelectorAll('[data-t]').forEach(el => {
+                const key = el.getAttribute('data-t');
+                if (translations[currentLang][key]) {
+                    el.innerHTML = translations[currentLang][key];
+                }
+            });
+            updateTranslateBtnText();
+        }
+
+        function updateTranslateBtnText() {
+            const translateBtnSpan = document.querySelector('#translateBtn span');
+            if (translateBtnSpan) {
+                translateBtnSpan.innerText = isTranslateMode ? translations[currentLang].translate_btn_back : translations[currentLang].translate_btn;
+            }
+        }
+
+        // --- NAVIGATION FLOW ---
+
+        function goToSetup() {
+            document.getElementById('intro-screen').classList.add('hidden');
+            document.getElementById('setup-screen').classList.remove('hidden');
+        }
+
+        function backToIntro() {
+            document.getElementById('setup-screen').classList.add('hidden');
+            document.getElementById('intro-screen').classList.remove('hidden');
+        }
+
+        function finishSetup() {
+            // Get values
+            const mode = document.getElementById('selected-mode').value;
+            const diff = document.getElementById('setup-difficulty').value;
+
+            // Hide Setup, Show Main
+            document.getElementById('setup-screen').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+
+            // Show mobile controls
+            setTimeout(() => {
+                document.getElementById('mobileControlsBar').classList.add('show');
+            }, 500);
+
+            // Update UI Badge
+            const badge = document.getElementById('current-mode-badge');
+            badge.innerText = mode === 'manual' ? (currentLang === 'pt' ? 'DIGITAR' : 'TYPE') : (currentLang === 'pt' ? 'ESCOLHER' : 'CHOOSE');
+
+            // Generate Game
+            generateGame(mode, diff);
+        }
+
+        function restartSetup() {
+            // Pause video
+            videoPlayer.pause();
+            // Hide Main, Show Setup
+            document.getElementById('main-app').classList.add('hidden');
+            document.getElementById('mobileControlsBar').classList.remove('show');
+            document.getElementById('setup-screen').classList.remove('hidden');
+        }
+
+        function selectMode(mode, el) {
+            document.getElementById('selected-mode').value = mode;
+            document.querySelectorAll('.mode-option').forEach(opt => opt.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        // --- DOM ELEMENTS ---
+        const videoPlayer = document.getElementById('mainVideo');
+        const englishContent = document.getElementById('english-content');
+        const portugueseContent = document.getElementById('portuguese-content');
+        const translateBtn = document.getElementById('translateBtn');
+        const checkBtn = document.getElementById('checkBtn');
+        const solveBtn = document.getElementById('solveBtn');
+        const mobilePlayIcon = document.getElementById('mobilePlayIcon');
+
+        // Update difficulty percentage text
+        document.getElementById('setup-difficulty').addEventListener('input', (e) => {
+            document.getElementById('diffDisplay').innerText = e.target.value + "%";
+        });
+
+        // --- DATA FROM SRT ---
+        // Sincronização exata palavra a palavra em Inglês
+        const englishWordData = [
+            {
+                "token": "did",
+                "start": 0.21,
+                "end": 0.42,
+                "isPunctuation": false
+            },
+            {
+                "token": "you",
+                "start": 0.42,
+                "end": 0.57,
+                "isPunctuation": false
+            },
+            {
+                "token": "know",
+                "start": 0.57,
+                "end": 0.78,
+                "isPunctuation": false
+            },
+            {
+                "token": "that",
+                "start": 0.78,
+                "end": 1.02,
+                "isPunctuation": false
+            },
+            {
+                "token": "eighty",
+                "start": 1.2,
+                "end": 1.68,
+                "isPunctuation": false
+            },
+            {
+                "token": "five",
+                "start": 1.77,
+                "end": 2.22,
+                "isPunctuation": false
+            },
+            {
+                "token": "percent",
+                "start": 2.22,
+                "end": 2.73,
+                "isPunctuation": false
+            },
+            {
+                "token": "of",
+                "start": 2.85,
+                "end": 3.0,
+                "isPunctuation": false
+            },
+            {
+                "token": "jobs",
+                "start": 3.0,
+                "end": 3.54,
+                "isPunctuation": false
+            },
+            {
+                "token": "that",
+                "start": 3.6,
+                "end": 3.81,
+                "isPunctuation": false
+            },
+            {
+                "token": "are",
+                "start": 3.81,
+                "end": 3.87,
+                "isPunctuation": false
+            },
+            {
+                "token": "going",
+                "start": 3.87,
+                "end": 3.99,
+                "isPunctuation": false
+            },
+            {
+                "token": "to",
+                "start": 3.99,
+                "end": 4.05,
+                "isPunctuation": false
+            },
+            {
+                "token": "be",
+                "start": 4.05,
+                "end": 4.2,
+                "isPunctuation": false
+            },
+            {
+                "token": "around",
+                "start": 4.2,
+                "end": 4.62,
+                "isPunctuation": false
+            },
+            {
+                "token": "and",
+                "start": 4.62,
+                "end": 4.705,
+                "isPunctuation": false
+            },
+            {
+                "token": "the",
+                "start": 4.705,
+                "end": 4.77,
+                "isPunctuation": false
+            },
+            {
+                "token": "next",
+                "start": 4.77,
+                "end": 4.98,
+                "isPunctuation": false
+            },
+            {
+                "token": "ten",
+                "start": 4.98,
+                "end": 5.13,
+                "isPunctuation": false
+            },
+            {
+                "token": "years",
+                "start": 5.13,
+                "end": 5.52,
+                "isPunctuation": false
+            },
+            {
+                "token": "haven't",
+                "start": 6.12,
+                "end": 6.78,
+                "isPunctuation": false
+            },
+            {
+                "token": "been",
+                "start": 6.9,
+                "end": 7.41,
+                "isPunctuation": false
+            },
+            {
+                "token": "created",
+                "start": 7.5,
+                "end": 8.1,
+                "isPunctuation": false
+            },
+            {
+                "token": "yet",
+                "start": 8.1,
+                "end": 8.37,
+                "isPunctuation": false
+            },
+            {
+                "token": "homeownership",
+                "start": 8.61,
+                "end": 9.39,
+                "isPunctuation": false
+            },
+            {
+                "token": "is",
+                "start": 9.39,
+                "end": 9.54,
+                "isPunctuation": false
+            },
+            {
+                "token": "out",
+                "start": 9.6,
+                "end": 9.87,
+                "isPunctuation": false
+            },
+            {
+                "token": "of",
+                "start": 9.87,
+                "end": 9.96,
+                "isPunctuation": false
+            },
+            {
+                "token": "reach",
+                "start": 9.96,
+                "end": 10.41,
+                "isPunctuation": false
+            },
+            {
+                "token": "the",
+                "start": 10.77,
+                "end": 11.1,
+                "isPunctuation": false
+            },
+            {
+                "token": "generational",
+                "start": 11.13,
+                "end": 11.91,
+                "isPunctuation": false
+            },
+            {
+                "token": "wealth",
+                "start": 11.91,
+                "end": 12.18,
+                "isPunctuation": false
+            },
+            {
+                "token": "gap",
+                "start": 12.18,
+                "end": 12.45,
+                "isPunctuation": false
+            },
+            {
+                "token": "is",
+                "start": 12.48,
+                "end": 12.69,
+                "isPunctuation": false
+            },
+            {
+                "token": "absolutely",
+                "start": 12.75,
+                "end": 13.92,
+                "isPunctuation": false
+            },
+            {
+                "token": "massive",
+                "start": 14.04,
+                "end": 14.79,
+                "isPunctuation": false
+            },
+            {
+                "token": "nearly",
+                "start": 15.45,
+                "end": 15.87,
+                "isPunctuation": false
+            },
+            {
+                "token": "ten",
+                "start": 15.87,
+                "end": 16.29,
+                "isPunctuation": false
+            },
+            {
+                "token": "million",
+                "start": 16.29,
+                "end": 16.74,
+                "isPunctuation": false
+            },
+            {
+                "token": "people",
+                "start": 16.74,
+                "end": 17.16,
+                "isPunctuation": false
+            },
+            {
+                "token": "right",
+                "start": 17.16,
+                "end": 17.37,
+                "isPunctuation": false
+            },
+            {
+                "token": "now",
+                "start": 17.37,
+                "end": 17.55,
+                "isPunctuation": false
+            },
+            {
+                "token": "are",
+                "start": 17.55,
+                "end": 17.64,
+                "isPunctuation": false
+            },
+            {
+                "token": "falling",
+                "start": 17.64,
+                "end": 18.0,
+                "isPunctuation": false
+            },
+            {
+                "token": "behind",
+                "start": 18.0,
+                "end": 18.33,
+                "isPunctuation": false
+            },
+            {
+                "token": "in",
+                "start": 18.33,
+                "end": 18.39,
+                "isPunctuation": false
+            },
+            {
+                "token": "their",
+                "start": 18.39,
+                "end": 18.48,
+                "isPunctuation": false
+            },
+            {
+                "token": "student",
+                "start": 18.48,
+                "end": 18.96,
+                "isPunctuation": false
+            },
+            {
+                "token": "loans",
+                "start": 18.96,
+                "end": 19.38,
+                "isPunctuation": false
+            },
+            {
+                "token": "that's",
+                "start": 19.41,
+                "end": 19.71,
+                "isPunctuation": false
+            },
+            {
+                "token": "two",
+                "start": 19.71,
+                "end": 19.92,
+                "isPunctuation": false
+            },
+            {
+                "token": "hundred",
+                "start": 19.92,
+                "end": 20.16,
+                "isPunctuation": false
+            },
+            {
+                "token": "fifty",
+                "start": 20.16,
+                "end": 20.43,
+                "isPunctuation": false
+            },
+            {
+                "token": "billion",
+                "start": 20.43,
+                "end": 20.82,
+                "isPunctuation": false
+            },
+            {
+                "token": "dollars",
+                "start": 20.82,
+                "end": 21.15,
+                "isPunctuation": false
+            },
+            {
+                "token": "worth",
+                "start": 21.15,
+                "end": 21.33,
+                "isPunctuation": false
+            },
+            {
+                "token": "of",
+                "start": 21.33,
+                "end": 21.48,
+                "isPunctuation": false
+            },
+            {
+                "token": "debt",
+                "start": 21.48,
+                "end": 21.78,
+                "isPunctuation": false
+            },
+            {
+                "token": "that",
+                "start": 21.81,
+                "end": 21.96,
+                "isPunctuation": false
+            },
+            {
+                "token": "is",
+                "start": 21.96,
+                "end": 22.08,
+                "isPunctuation": false
+            },
+            {
+                "token": "past",
+                "start": 22.08,
+                "end": 22.68,
+                "isPunctuation": false
+            },
+            {
+                "token": "do",
+                "start": 22.77,
+                "end": 23.25,
+                "isPunctuation": false
+            },
+            {
+                "token": "the",
+                "start": 23.55,
+                "end": 23.7,
+                "isPunctuation": false
+            },
+            {
+                "token": "world",
+                "start": 23.7,
+                "end": 24.06,
+                "isPunctuation": false
+            },
+            {
+                "token": "is",
+                "start": 24.06,
+                "end": 24.21,
+                "isPunctuation": false
+            },
+            {
+                "token": "in",
+                "start": 24.21,
+                "end": 24.33,
+                "isPunctuation": false
+            },
+            {
+                "token": "chaos",
+                "start": 24.33,
+                "end": 25.11,
+                "isPunctuation": false
+            },
+            {
+                "token": "and",
+                "start": 25.83,
+                "end": 26.19,
+                "isPunctuation": false
+            },
+            {
+                "token": "most",
+                "start": 26.67,
+                "end": 27.03,
+                "isPunctuation": false
+            },
+            {
+                "token": "twenty",
+                "start": 27.03,
+                "end": 27.33,
+                "isPunctuation": false
+            },
+            {
+                "token": "somethings",
+                "start": 27.33,
+                "end": 27.9,
+                "isPunctuation": false
+            },
+            {
+                "token": "have",
+                "start": 27.93,
+                "end": 28.11,
+                "isPunctuation": false
+            },
+            {
+                "token": "parents",
+                "start": 28.11,
+                "end": 28.65,
+                "isPunctuation": false
+            },
+            {
+                "token": "that",
+                "start": 28.71,
+                "end": 28.89,
+                "isPunctuation": false
+            },
+            {
+                "token": "lived",
+                "start": 28.89,
+                "end": 29.19,
+                "isPunctuation": false
+            },
+            {
+                "token": "in",
+                "start": 29.19,
+                "end": 29.28,
+                "isPunctuation": false
+            },
+            {
+                "token": "a",
+                "start": 29.28,
+                "end": 29.31,
+                "isPunctuation": false
+            },
+            {
+                "token": "very",
+                "start": 29.31,
+                "end": 29.64,
+                "isPunctuation": false
+            },
+            {
+                "token": "predictable",
+                "start": 29.64,
+                "end": 30.24,
+                "isPunctuation": false
+            },
+            {
+                "token": "stable",
+                "start": 30.24,
+                "end": 30.72,
+                "isPunctuation": false
+            },
+            {
+                "token": "economy",
+                "start": 30.72,
+                "end": 31.26,
+                "isPunctuation": false
+            },
+            {
+                "token": "they",
+                "start": 31.77,
+                "end": 31.92,
+                "isPunctuation": false
+            },
+            {
+                "token": "went",
+                "start": 31.92,
+                "end": 32.1,
+                "isPunctuation": false
+            },
+            {
+                "token": "to",
+                "start": 32.1,
+                "end": 32.22,
+                "isPunctuation": false
+            },
+            {
+                "token": "a",
+                "start": 32.22,
+                "end": 32.28,
+                "isPunctuation": false
+            },
+            {
+                "token": "corporate",
+                "start": 32.28,
+                "end": 32.64,
+                "isPunctuation": false
+            },
+            {
+                "token": "job",
+                "start": 32.64,
+                "end": 32.94,
+                "isPunctuation": false
+            },
+            {
+                "token": "they",
+                "start": 33.21,
+                "end": 33.39,
+                "isPunctuation": false
+            },
+            {
+                "token": "reported",
+                "start": 33.39,
+                "end": 33.87,
+                "isPunctuation": false
+            },
+            {
+                "token": "to",
+                "start": 33.87,
+                "end": 33.99,
+                "isPunctuation": false
+            },
+            {
+                "token": "the",
+                "start": 33.99,
+                "end": 34.14,
+                "isPunctuation": false
+            },
+            {
+                "token": "office",
+                "start": 34.14,
+                "end": 34.65,
+                "isPunctuation": false
+            },
+            {
+                "token": "they",
+                "start": 34.83,
+                "end": 34.98,
+                "isPunctuation": false
+            },
+            {
+                "token": "had",
+                "start": 34.98,
+                "end": 35.16,
+                "isPunctuation": false
+            },
+            {
+                "token": "a",
+                "start": 35.16,
+                "end": 35.19,
+                "isPunctuation": false
+            },
+            {
+                "token": "network",
+                "start": 35.19,
+                "end": 35.61,
+                "isPunctuation": false
+            },
+            {
+                "token": "of",
+                "start": 35.61,
+                "end": 35.67,
+                "isPunctuation": false
+            },
+            {
+                "token": "friends",
+                "start": 35.67,
+                "end": 36.0,
+                "isPunctuation": false
+            },
+            {
+                "token": "at",
+                "start": 36.0,
+                "end": 36.09,
+                "isPunctuation": false
+            },
+            {
+                "token": "work",
+                "start": 36.09,
+                "end": 36.48,
+                "isPunctuation": false
+            },
+            {
+                "token": "that's",
+                "start": 36.87,
+                "end": 37.17,
+                "isPunctuation": false
+            },
+            {
+                "token": "not",
+                "start": 37.17,
+                "end": 37.38,
+                "isPunctuation": false
+            },
+            {
+                "token": "the",
+                "start": 37.38,
+                "end": 37.47,
+                "isPunctuation": false
+            },
+            {
+                "token": "typical",
+                "start": 37.47,
+                "end": 37.83,
+                "isPunctuation": false
+            },
+            {
+                "token": "twenty",
+                "start": 37.83,
+                "end": 38.07,
+                "isPunctuation": false
+            },
+            {
+                "token": "year",
+                "start": 38.07,
+                "end": 38.19,
+                "isPunctuation": false
+            },
+            {
+                "token": "old",
+                "start": 38.19,
+                "end": 38.34,
+                "isPunctuation": false
+            },
+            {
+                "token": "experience",
+                "start": 38.34,
+                "end": 38.88,
+                "isPunctuation": false
+            }
+        ];
+
+        // Tradução Sincronizada (agrupada por frases para melhor leitura)
+        const portugueseWordData = [
+            { token: "Não diga sempre 'de nada'.", start: 0.00, end: 2.10 },
+            { token: "Claro que é ok dizer 'de nada' às vezes.", start: 2.30, end: 5.05 },
+            { token: "Mas eu quero que vocês conheçam outras alternativas.", start: 5.15, end: 7.60 }
+        ];
+
+        let activeGapIndices = new Set();
+
+        function generateGame(mode, difficultyPercent) {
+            const gameContainer = document.getElementById('game-container');
+            gameContainer.classList.remove('hidden');
+            setTimeout(() => {
+                gameContainer.classList.remove('opacity-0');
+            }, 50);
+
+            // 1. Determine Gaps
+            activeGapIndices.clear();
+            const probability = parseInt(difficultyPercent) / 100;
+
+            englishWordData.forEach((item, index) => {
+                if (!item.isPunctuation && Math.random() < probability) {
+                    activeGapIndices.add(index);
+                }
+            });
+
+            // 2. Render English Text
+            let enHtml = '';
+            englishWordData.forEach((item, index) => {
+                const isGap = activeGapIndices.has(index);
+
+                if (item.isPunctuation) {
+                    enHtml += `<span class="word-span text-white font-bold ml-px mr-2 select-none" data-t-en="${index}">${item.token}</span>`;
+                } else if (!isGap) {
+                    enHtml += `<span class="word-span text-gray-400 mr-2 select-none cursor-pointer hover:text-yellow-400 transition-colors" data-t-en="${index}" onclick="playWordAudio('${item.token}')">${item.token}</span>`;
+                } else {
+                    if (mode === 'manual') {
+                        // Data index helps us sync highlight even on inputs
+                        enHtml += `<input type="text" class="gap-input mr-2" data-answer="${item.token}" data-index="${index}" data-t-en="${index}" value="" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="next">`;
+                    } else {
+                        enHtml += createMultipleChoice(item.token, index, false);
+                    }
+                }
+            });
+            englishContent.innerHTML = enHtml;
+
+            // 3. Render Portuguese Text (For translation view)
+            let ptHtml = '';
+            portugueseWordData.forEach((item, index) => {
+                // Adiciona quebra de linha visual para frases longas
+                ptHtml += `<div class="word-span mb-4 block" data-t-pt="${index}">${item.token}</div>`;
+            });
+            portugueseContent.innerHTML = ptHtml;
+
+            setupInputNavigation();
+        }
+
+        // --- SYNC LOOP ---
+        videoPlayer.addEventListener('timeupdate', () => {
+            const t = videoPlayer.currentTime;
+            if (!isTranslateMode) {
+                syncText(t, englishWordData, 'data-t-en');
+            } else {
+                syncText(t, portugueseWordData, 'data-t-pt');
+            }
+        });
+
+        function syncText(currentTime, dataArray, attrName) {
+            // Find active segment
+            const activeIndex = dataArray.findIndex(w => currentTime >= w.start && currentTime <= w.end);
+
+            // Remove highlight from previous
+            const currentActive = document.querySelector(`[${attrName}].active-word`);
+            if (currentActive && currentActive.getAttribute(attrName) != activeIndex) {
+                currentActive.classList.remove('active-word');
+            }
+
+            // Add highlight to current
+            if (activeIndex !== -1) {
+                const el = document.querySelector(`[${attrName}="${activeIndex}"]`);
+                if (el && !el.classList.contains('active-word')) {
+                    el.classList.add('active-word');
+                    // Smooth scroll to keep text in view
+                    el.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+                }
+            }
+        }
+
+        // --- TRANSLATION TOGGLE LOGIC ---
+        translateBtn.addEventListener('click', () => {
+            isTranslateMode = !isTranslateMode;
+            const transBtn = document.getElementById('translateBtn');
+            const icon = transBtn.querySelector('i');
+
+            if (isTranslateMode) {
+                // Switch to Translation View
+                englishContent.classList.add('hidden');
+                portugueseContent.classList.remove('hidden');
+
+                // Update Button Style
+                transBtn.classList.add('bg-white/20', 'border-white/40', 'text-white');
+                icon.classList.remove('text-blue-400');
+                icon.classList.add('text-yellow-400');
+
+                // Disable Game Buttons
+                solveBtn.disabled = true;
+                checkBtn.disabled = true;
+                solveBtn.classList.add('opacity-30', 'cursor-not-allowed', 'grayscale');
+                checkBtn.classList.add('opacity-30', 'cursor-not-allowed', 'grayscale');
+
+                // Force sync immediately
+                syncText(videoPlayer.currentTime, portugueseWordData, 'data-t-pt');
+            } else {
+                // Switch back to Game View
+                portugueseContent.classList.add('hidden');
+                englishContent.classList.remove('hidden');
+
+                // Reset Button Style
+                transBtn.classList.remove('bg-white/20', 'border-white/40', 'text-white');
+                icon.classList.add('text-blue-400');
+                icon.classList.remove('text-yellow-400');
+
+                // Enable Game Buttons
+                solveBtn.disabled = false;
+                checkBtn.disabled = false;
+                solveBtn.classList.remove('opacity-30', 'cursor-not-allowed', 'grayscale');
+                checkBtn.classList.remove('opacity-30', 'cursor-not-allowed', 'grayscale');
+
+                // Force sync immediately
+                syncText(videoPlayer.currentTime, englishWordData, 'data-t-en');
+            }
+            updateTranslateBtnText();
+        });
+
+        // --- GAME HELPERS ---
+        function createMultipleChoice(correctWord, index, isSolved) {
+            const allWords = englishWordData.filter(d => !d.isPunctuation && d.token.length > 2).map(d => d.token);
+            let distractors = [];
+            let attempts = 0;
+            // Generate unique distractors
+            while (distractors.length < 3 && attempts < 50) {
+                const r = allWords[Math.floor(Math.random() * allWords.length)];
+                if (r && r.toLowerCase() !== correctWord.toLowerCase() && !distractors.includes(r)) {
+                    distractors.push(r);
+                }
+                attempts++;
+            }
+            // Fallback if not enough words
+            if (distractors.length < 3) distractors = ["what", "time", "good", "work", "life"].filter(w => w !== correctWord).slice(0, 3 - distractors.length).concat(distractors);
+
+            distractors.push(correctWord);
+            distractors.sort(() => Math.random() - 0.5);
+
+            let html = `<select class="gap-select mr-2" data-answer="${correctWord}" data-index="${index}" data-t-en="${index}">`;
+            html += `<option value="">...</option>`;
+            distractors.forEach(opt => {
+                html += `<option value="${opt}">${opt}</option>`;
+            });
+            html += `</select>`;
+            return html;
+        }
+
+        function setupInputNavigation() {
+            const inputs = document.querySelectorAll('.gap-input, .gap-select');
+            inputs.forEach((input, index) => {
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === ' ' || e.key === 'Enter') {
+                        e.preventDefault();
+                        if (index < inputs.length - 1) {
+                            inputs[index + 1].focus();
+                        } else {
+                            checkBtn.focus();
+                        }
+                    }
+                });
+                input.addEventListener('input', (e) => {
+                    if (input.tagName === 'INPUT' && input.value.endsWith(' ')) {
+                        input.value = input.value.trim();
+                        if (index < inputs.length - 1) inputs[index + 1].focus();
+                    }
+                });
+            });
+        }
+
+        checkBtn.addEventListener('click', () => {
+            let errors = 0;
+            document.querySelectorAll('.gap-input, .gap-select').forEach(input => {
+                const val = input.value.trim().toLowerCase().replace(/[.,!?;:]/g, '');
+                const ans = input.getAttribute('data-answer').toLowerCase().replace(/[.,!?;:]/g, '');
+                input.classList.remove('correct', 'incorrect');
+                if (val === ans) {
+                    input.classList.add('correct');
+                } else {
+                    input.classList.add('incorrect');
+                    errors++;
+                }
+            });
+
+            const span = checkBtn.querySelector('span');
+            if (errors === 0) {
+                span.innerText = translations[currentLang].check_btn_perfect;
+                checkBtn.classList.replace('bg-green-500', 'bg-yellow-500');
+                setTimeout(() => {
+                    checkBtn.classList.replace('bg-yellow-500', 'bg-green-500');
+                    span.innerText = translations[currentLang].check_btn;
+                }, 3000);
+            } else {
+                span.innerText = `❌ ${errors} ${translations[currentLang].check_btn_error}`;
+                checkBtn.classList.replace('bg-green-500', 'bg-red-500');
+                setTimeout(() => {
+                    span.innerText = translations[currentLang].check_btn;
+                    checkBtn.classList.replace('bg-red-500', 'bg-green-500');
+                }, 2000);
+            }
+        });
+
+        solveBtn.addEventListener('click', () => {
+            if (confirm(translations[currentLang].confirm_solve)) {
+                document.querySelectorAll('.gap-input, .gap-select').forEach(input => {
+                    input.value = input.getAttribute('data-answer');
+                    input.classList.add('correct');
+                    input.classList.remove('incorrect');
+                });
+            }
+        });
+
+        function togglePlay() { videoPlayer.paused ? videoPlayer.play() : videoPlayer.pause(); }
+        function rewindVideo(s) { videoPlayer.currentTime = Math.max(0, videoPlayer.currentTime - s); }
+        function focusCurrentInput() {
+            const el = document.querySelector('.gap-input:not(.correct), .gap-select:not(.correct)');
+            if (el) { el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
+        }
+
+        // --- GLOBAL KEY SHORTCUTS ---
+        document.addEventListener('keydown', (e) => {
+            if (!document.getElementById('main-app').classList.contains('hidden')) {
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    togglePlay();
+                }
+            }
+        });
+
+        // Mobile Controls
+        document.querySelectorAll('.no-steal').forEach(btn => {
+            btn.addEventListener('touchstart', (e) => { e.preventDefault(); handleMobileAction(btn.dataset.action); });
+            btn.addEventListener('mousedown', (e) => { e.preventDefault(); handleMobileAction(btn.dataset.action); });
+        });
+        function handleMobileAction(a) {
+            if (a === 'play') togglePlay();
+            if (a === 'rewind3') rewindVideo(3);
+            if (a === 'rewind5') rewindVideo(5);
+            if (a === 'focus') focusCurrentInput();
+        }
+
+        videoPlayer.addEventListener('play', () => { mobilePlayIcon.classList.replace('fa-play', 'fa-pause'); mobilePlayIcon.classList.remove('ml-1'); });
+        videoPlayer.addEventListener('pause', () => { mobilePlayIcon.classList.replace('fa-pause', 'fa-play'); mobilePlayIcon.classList.add('ml-1'); });
+
+        window.setSpeed = function (s, b) {
+            videoPlayer.playbackRate = s;
+            document.querySelectorAll('.speed-btn').forEach(x => x.classList.remove('active'));
+            b.classList.add('active');
+        };
+
+        function playWordAudio(word) {
+            const cleanWord = word.toLowerCase().replace(/[^\w]/g, '');
+            const audioFilename = `audio/word_${cleanWord}.mp3`;
+            const audio = new Audio(audioFilename);
+            audio.play().catch(e => console.warn(`Word audio not found: ${audioFilename}`));
+        }
+    </script>
+
+</body>
+
+</html>

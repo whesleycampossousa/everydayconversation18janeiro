@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Management - Learning English</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+        }
+
+        .word-tooltip {
+            position: relative;
+            cursor: pointer;
+            border-bottom: 2px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+
+        .word-tooltip:hover {
+            background-color: #e0f2fe;
+            border-bottom-color: #3b82f6;
+            color: #1d4ed8;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            background-color: #1e293b;
+            color: #fff;
+            text-align: center;
+            padding: 5px 10px;
+            border-radius: 6px;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1e293b transparent transparent transparent;
+        }
+
+        .word-tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .reveal-btn {
+            transition: all 0.3s ease;
+        }
+
+        .reveal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+    </style>
+</head>
+
+<body class="text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-xl">
+                    F1
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight">Everyday Conversation</h1>
+                    <p class="text-xs text-blue-200">Focus Time: Translation</p>
+                </div>
+            </div>
+            <a href="../../../index.html"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm no-underline">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                    <path fill-rule="evenodd"
+                        d="M11.03 3.97a.75.75 0 010 1.06l-6.22 6.22H21a.75.75 0 010 1.5H4.81l6.22 6.22a.75.75 0 11-1.06 1.06l-7.5-7.5a.75.75 0 010-1.06l7.5-7.5a.75.75 0 011.06 0z"
+                        clip-rule="evenodd" />
+                </svg> Voltar ao Menu de atividades
+            </a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 max-w-4xl">
+
+        <!-- Intro Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-8">
+            <div class="h-48 bg-gray-800 relative">
+                <img src="../../media/learning_process.png" class="w-full h-full object-cover opacity-60"
+                    alt="Time Management Practice">
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center p-4">
+                    <h2 class="text-3xl font-bold mb-2 text-shadow">Time Management</h2>
+                    <p class="text-lg text-slate-200">Traduza as frases do dia e expanda seu vocabulário</p>
+                </div>
+            </div>
+            <div class="p-6 bg-blue-50 border-b border-blue-100">
+                <h3 class="font-bold text-blue-800 flex items-center gap-2 mb-2">
+                    <i class="fas fa-info-circle"></i> Como praticar:
+                </h3>
+                <ul class="list-disc list-inside text-sm text-blue-700 space-y-1 ml-2">
+                    <li>Passe o mouse (ou toque) nas palavras em inglês para ver a tradução.</li>
+                    <li>Clique nas palavras para ouvir a pronúncia individual.</li>
+                    <li>Tente traduzir mentalmente ou escreva antes de revelar a resposta.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Translation Container -->
+        <div id="translation-container" class="space-y-8">
+            <!-- Content will be injected by JS -->
+        </div>
+
+        <!-- Full Text & Glossary Section -->
+        <div class="mt-12 grid md:grid-cols-2 gap-8">
+
+            <!-- Full Text -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <h3 class="font-bold text-xl mb-4 text-slate-800 flex items-center gap-2">
+                    <i class="fas fa-align-left text-blue-600"></i> Texto Completo
+                </h3>
+                <div
+                    class="prose prose-sm text-gray-600 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <p>
+                        Managing time effectively helps reduce pressure and improve daily performance. In the
+                        beginning, many people struggle to organize tasks and priorities. Writing simple to-do lists
+                        can bring clarity and direction. Setting clear deadlines helps avoid last-minute stress.
+                        Breaks are also important to maintain focus and energy. Overloading schedules often leads to
+                        frustration and exhaustion. Learning to say no protects mental health and productivity. Digital
+                        calendars provide reminders and structure for busy routines. With practice, planning becomes
+                        more natural and efficient. In the long run, good time management creates balance, confidence,
+                        and greater control over personal and professional life.
+                    </p>
+                </div>
+                <div class="mt-4 pt-4 border-t border-slate-100">
+                    <h4 class="font-bold text-sm mb-2 text-slate-700">Tradução Oficial</h4>
+                    <p class="text-sm text-slate-500 italic">
+                        "Gerenciar o tempo de forma eficaz ajuda a reduzir a pressão e melhorar o desempenho diário.
+                        No começo, muitas pessoas têm dificuldade para organizar tarefas e prioridades. Escrever listas
+                        de tarefas simples pode trazer clareza e direção. Definir prazos claros ajuda a evitar o
+                        estresse de última hora. Pausas também são importantes para manter o foco e a energia.
+                        Sobrecarregar a agenda geralmente leva à frustração e ao esgotamento. Aprender a dizer não
+                        protege a saúde mental e a produtividade. Calendários digitais fornecem lembretes e estrutura
+                        para rotinas corridas. Com prática, o planejamento se torna mais natural e eficiente. A longo
+                        prazo, uma boa gestão do tempo cria equilíbrio, confiança e maior controle sobre a vida pessoal
+                        e profissional."
+                    </p>
+                </div>
+            </div>
+
+            <!-- Glossary -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <h3 class="font-bold text-xl mb-4 text-slate-800 flex items-center gap-2">
+                    <i class="fas fa-book text-green-600"></i> Glossário
+                </h3>
+                <div class="h-80 overflow-y-auto pr-2 custom-scrollbar">
+                    <ul class="space-y-3" id="glossary-list">
+                        <!-- Glossary items injected by JS -->
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-12 text-center text-sm">
+        <p>© 2024 Everyday Conversation. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Data Configuration
+        const trainingText = "Managing time effectively helps reduce pressure and improve daily performance. In the beginning, many people struggle to organize tasks and priorities. Writing simple to-do lists can bring clarity and direction. Setting clear deadlines helps avoid last-minute stress. Breaks are also important to maintain focus and energy. Overloading schedules often leads to frustration and exhaustion. Learning to say no protects mental health and productivity. Digital calendars provide reminders and structure for busy routines. With practice, planning becomes more natural and efficient. In the long run, good time management creates balance, confidence, and greater control over personal and professional life.";
+        const sentences = [
+            {
+                "english": "Managing time effectively helps reduce pressure and improve daily performance.",
+                "portuguese": "Gerenciar o tempo de forma eficaz ajuda a reduzir a pressão e melhorar o desempenho diário.",
+                "highlight": ""
+            },
+            {
+                "english": "In the beginning, many people struggle to organize tasks and priorities.",
+                "portuguese": "No começo, muitas pessoas têm dificuldade para organizar tarefas e prioridades.",
+                "highlight": ""
+            },
+            {
+                "english": "Writing simple to-do lists can bring clarity and direction.",
+                "portuguese": "Escrever listas de tarefas simples pode trazer clareza e direção.",
+                "highlight": ""
+            },
+            {
+                "english": "Setting clear deadlines helps avoid last-minute stress.",
+                "portuguese": "Definir prazos claros ajuda a evitar o estresse de última hora.",
+                "highlight": ""
+            },
+            {
+                "english": "Breaks are also important to maintain focus and energy.",
+                "portuguese": "Pausas também são importantes para manter o foco e a energia.",
+                "highlight": ""
+            },
+            {
+                "english": "Overloading schedules often leads to frustration and exhaustion.",
+                "portuguese": "Sobrecarregar a agenda geralmente leva à frustração e ao esgotamento.",
+                "highlight": ""
+            },
+            {
+                "english": "Learning to say no protects mental health and productivity.",
+                "portuguese": "Aprender a dizer não protege a saúde mental e a produtividade.",
+                "highlight": ""
+            },
+            {
+                "english": "Digital calendars provide reminders and structure for busy routines.",
+                "portuguese": "Calendários digitais fornecem lembretes e estrutura para rotinas corridas.",
+                "highlight": ""
+            },
+            {
+                "english": "With practice, planning becomes more natural and efficient.",
+                "portuguese": "Com prática, o planejamento se torna mais natural e eficiente.",
+                "highlight": ""
+            },
+            {
+                "english": "In the long run, good time management creates balance, confidence, and greater control over personal and professional life.",
+                "portuguese": "A longo prazo, uma boa gestão do tempo cria equilíbrio, confiança e maior controle sobre a vida pessoal e profissional.",
+                "highlight": ""
+            }
+        ];
+
+        const wordTranslations = {
+            "Managing": "Gerenciando",
+            "time": "tempo",
+            "effectively": "de forma eficaz",
+            "helps": "ajuda",
+            "reduce": "reduzir",
+            "pressure": "pressão",
+            "and": "e",
+            "improve": "melhorar",
+            "daily": "diário",
+            "performance": "desempenho",
+            "In": "No",
+            "the": "o/a",
+            "beginning": "começo/início",
+            "many": "muitas/muitos",
+            "people": "pessoas",
+            "struggle": "têm dificuldade",
+            "to": "para",
+            "organize": "organizar",
+            "tasks": "tarefas",
+            "priorities": "prioridades",
+            "Writing": "Escrever",
+            "simple": "simples",
+            "to-do": "de tarefas",
+            "lists": "listas",
+            "can": "pode",
+            "bring": "trazer",
+            "clarity": "clareza",
+            "direction": "direção",
+            "Setting": "Definir",
+            "clear": "claros",
+            "deadlines": "prazos",
+            "avoid": "evitar",
+            "last-minute": "de última hora",
+            "stress": "estresse",
+            "Breaks": "Pausas",
+            "are": "são/estão",
+            "also": "também",
+            "important": "importantes",
+            "maintain": "manter",
+            "focus": "foco",
+            "energy": "energia",
+            "Overloading": "Sobrecarregar",
+            "schedules": "agendas",
+            "often": "frequentemente",
+            "leads": "leva",
+            "frustration": "frustração",
+            "exhaustion": "esgotamento",
+            "Learning": "Aprender",
+            "say": "dizer",
+            "no": "não",
+            "protects": "protege",
+            "mental": "mental",
+            "health": "saúde",
+            "productivity": "produtividade",
+            "Digital": "Digitais",
+            "calendars": "calendários",
+            "provide": "fornecem",
+            "reminders": "lembretes",
+            "structure": "estrutura",
+            "for": "para",
+            "busy": "cheias/corridas",
+            "routines": "rotinas",
+            "With": "Com",
+            "practice": "prática",
+            "planning": "planejamento",
+            "becomes": "se torna",
+            "more": "mais",
+            "natural": "natural",
+            "efficient": "eficiente",
+            "long": "longo",
+            "run": "prazo/caminho",
+            "good": "boa",
+            "management": "gestão",
+            "creates": "cria",
+            "balance": "equilíbrio",
+            "confidence": "confiança",
+            "greater": "maior",
+            "control": "controle",
+            "over": "sobre",
+            "personal": "pessoal",
+            "professional": "profissional",
+            "life": "vida"
+        };
+
+        const glossary = Object.entries(wordTranslations).sort();
+        const usePreRecordedAudio = true;
+
+        // TTS logic removed to satisfy project standards (Layer 32).
+        const synth = null;
+        let voices = [];
+
+        function loadVoices() {
+            // No longer loads voices as TTS is removed.
+        }
+
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = loadVoices;
+        }
+
+        // --- Speech Recognition Setup ---
+        let recognition = null;
+        let currentMicIndex = -1;
+
+        function setupRecognition() {
+            if ('webkitSpeechRecognition' in window) {
+                recognition = new webkitSpeechRecognition();
+                recognition.lang = 'pt-BR';
+                recognition.continuous = false;
+                recognition.interimResults = false;
+
+                recognition.onstart = function () {
+                    const btn = document.getElementById(`mic-btn-${currentMicIndex}`);
+                    if (btn) {
+                        btn.classList.add('text-red-500', 'animate-pulse');
+                        btn.classList.remove('text-gray-400');
+                    }
+                };
+
+                recognition.onend = function () {
+                    const btn = document.getElementById(`mic-btn-${currentMicIndex}`);
+                    if (btn) {
+                        btn.classList.remove('text-red-500', 'animate-pulse');
+                        btn.classList.add('text-gray-400');
+                    }
+                    currentMicIndex = -1;
+                };
+
+                recognition.onresult = function (event) {
+                    const transcript = event.results[0][0].transcript;
+                    const textarea = document.getElementById(`textarea-${currentMicIndex}`);
+                    if (textarea) {
+                        textarea.value = transcript;
+                    }
+                };
+
+                recognition.onerror = function (event) {
+                    console.error(event.error);
+                };
+            } else {
+                alert('Seu navegador não suporta reconhecimento de voz totalmente. Recomendamos usar o Google Chrome.');
+            }
+        }
+
+        function toggleSpeech(index) {
+            if (!recognition) setupRecognition();
+
+            if (currentMicIndex === index) {
+                recognition.stop();
+            } else {
+                if (currentMicIndex !== -1) recognition.stop();
+                currentMicIndex = index;
+                recognition.start();
+            }
+        }
+
+        function speak(text, rate = 1) {
+            if (text !== '') {
+                // Find index if it's a full sentence
+                const foundSentence = sentences.find(s => s.english === text || s.english.replace(/"/g, '') === text);
+                const index = foundSentence ? sentences.indexOf(foundSentence) : -1;
+
+                if (index !== -1) {
+                    if (!usePreRecordedAudio) {
+                        console.warn('Pre-recorded audio is disabled and TTS is removed.');
+                        return;
+                    }
+                    const isSlow = rate <= 0.8;
+                    const suffix = isSlow ? '_slow' : '';
+                    const audioPath = `audio/sentence_${index}${suffix}.mp3`;
+                    const audio = new Audio(audioPath);
+                    audio.play().catch(e => {
+                        console.warn(`Audio file not found for index ${index}: ${audioPath}`);
+                    });
+                } else {
+                    // Not a sentence (likely a word)
+                    if (text.split(' ').length === 1) {
+                        const cleanWord = text.toLowerCase().replace(/[^\w]/g, '');
+                        if (!usePreRecordedAudio) {
+                            console.warn('Pre-recorded audio is disabled and TTS is removed.');
+                            return;
+                        }
+                        const audioFilename = `audio/word_${cleanWord}.mp3`;
+
+                        const audio = new Audio(audioFilename);
+                        audio.oncanplaythrough = () => audio.play();
+                        audio.onerror = () => console.warn(`Word audio not found: ${audioFilename}`);
+                        return;
+                    }
+                    console.warn(`Text not found: ${text}`);
+                }
+            }
+        }
+
+        // Render Functions
+        function createTooltippedSentence(sentence) {
+            const words = sentence.split(' ');
+            return words.map(word => {
+                const cleanWord = word.replace(/[.,!?]/g, '');
+                const translation = wordTranslations[cleanWord] || '?';
+                return `<span class="word-tooltip" onclick="speak('${cleanWord}'); this.querySelector('.tooltip-text').style.visibility='visible'; this.querySelector('.tooltip-text').style.opacity='1'; setTimeout(() => { this.querySelector('.tooltip-text').style.visibility=''; this.querySelector('.tooltip-text').style.opacity=''; }, 3000);">
+                            ${word}
+                            <span class="tooltip-text">${translation}</span>
+                        </span>`;
+            }).join(' ');
+        }
+
+        function renderApp() {
+            const container = document.getElementById('translation-container');
+            const glossaryList = document.getElementById('glossary-list');
+
+            // Render Sentences
+            sentences.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-xl p-6 shadow-sm border border-gray-100 transition hover:shadow-md";
+                card.innerHTML = `
+                    <div class="flex flex-col md:flex-row gap-6 justify-between items-start md:items-center mb-4">
+                        <div class="flex-1">
+                            <span class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 block">Frase ${index + 1}</span>
+                            <div class="text-xl md:text-2xl text-slate-800 font-medium leading-relaxed">
+                                ${createTooltippedSentence(item.english)}
+                            </div>
+                        </div>
+                        <div class="flex gap-2 shrink-0">
+                            <button onclick="speak('${item.english.replace(/'/g, "\\'")}', 1)" class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 flex items-center justify-center transition" title="Ouvir Normal">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                            <button onclick="speak('${item.english.replace(/'/g, "\\'")}', 0.7)" class="w-10 h-10 rounded-full bg-yellow-100 text-yellow-600 hover:bg-yellow-200 flex items-center justify-center transition" title="Ouvir Lento">
+                                <i class="fas fa-tachometer-alt-slow"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <textarea id="textarea-${index}" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition resize-none h-24" placeholder="Escreva sua tradução aqui... (ou clique no microfone)"></textarea>
+                        <button id="mic-btn-${index}" onclick="toggleSpeech(${index})" class="absolute bottom-3 right-3 text-gray-400 hover:text-blue-600 transition-colors p-2" title="Falar tradução">
+                            <i class="fas fa-microphone text-xl"></i>
+                        </button>
+                    </div>
+
+                    <div class="mt-4">
+                        <button onclick="document.getElementById('reveal-${index}').classList.remove('hidden'); this.classList.add('hidden')" class="reveal-btn text-sm font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-lg inline-flex items-center gap-2">
+                            <i class="fas fa-eye"></i> Revelar Resposta
+                        </button>
+                        
+                        <div id="reveal-${index}" class="hidden bg-green-50 border border-green-100 rounded-lg p-4 mt-2 animate-fade-in-down">
+                           <p class="text-green-800 font-medium">
+                                <i class="fas fa-check-circle mr-2"></i> ${item.portuguese}
+                           </p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Render Glossary
+            glossary.forEach(([eng, pt]) => {
+                const li = document.createElement('li');
+                li.className = "flex justify-between items-center text-sm border-b border-dashed border-gray-200 pb-1 last:border-0";
+                li.innerHTML = `
+                    <span class="font-medium text-slate-700 cursor-pointer hover:text-blue-600" onclick="speak('${eng}')">${eng} <i class="fas fa-volume-up text-xs text-gray-300 ml-1"></i></span>
+                    <span class="text-slate-500 italic">${pt}</span>
+                `;
+                glossaryList.appendChild(li);
+            });
+        }
+
+        // Initialize
+        loadVoices();
+        renderApp();
+
+    </script>
+</body>
+
+</html>
