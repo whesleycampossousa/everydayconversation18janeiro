@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes,viewport-fit=cover">
+<title>Operações com Frações e Decimais</title>
+<style>html,body{margin:0;width:100%;height:100%;background:#0b1f3a;color:white;font-family:system-ui,sans-serif}.loading{height:100%;display:grid;place-items:center;text-align:center;padding:24px;box-sizing:border-box}.loading strong{font-size:24px}</style>
+</head>
+<body>
+<div class="loading"><div><strong>Carregando o resumo…</strong><br>Zoom com dois dedos habilitado.</div></div>
+<script>
+(async()=>{
+  const raw='https://raw.githubusercontent.com/whesleycampossousa/everydayconversation18janeiro/main/materiais/resumo-fracoes-decimais-2026-09-17.html';
+  try{
+    let html=await (await fetch(raw,{cache:'no-store'})).text();
+    const extraStyle=`<style>
+      .slides{touch-action:none!important}
+      .sheet{transform:scale(var(--scale,1))!important;transform-origin:center center!important}
+    </style>`;
+    const extraScript=`<script>
+    (()=>{
+      const slides=document.getElementById('slides');
+      if(!slides) return;
+      let z=1,d0=0,z0=1,pinch=false,lastTap=0;
+      const clamp=n=>Math.max(.84,Math.min(2.5,n));
+      const setZoom=n=>{z=clamp(n);document.documentElement.style.setProperty('--scale',z.toFixed(3));};
+      const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
+      const zi=document.getElementById('zoomIn'),zo=document.getElementById('zoomOut');
+      if(zi) zi.onclick=()=>setZoom(z+.08);
+      if(zo) zo.onclick=()=>setZoom(z-.08);
+      slides.addEventListener('touchstart',e=>{
+        if(e.touches.length===2){pinch=true;d0=dist(e.touches);z0=z;e.preventDefault();e.stopPropagation();}
+        else if(z>1.03){e.stopPropagation();}
+      },{passive:false,capture:true});
+      slides.addEventListener('touchmove',e=>{
+        if(pinch&&e.touches.length===2){setZoom(z0*(dist(e.touches)/d0));e.preventDefault();e.stopPropagation();}
+        else if(z>1.03){e.preventDefault();e.stopPropagation();}
+      },{passive:false,capture:true});
+      slides.addEventListener('touchend',e=>{
+        if(pinch){if(e.touches.length<2){pinch=false;d0=0;}e.preventDefault();e.stopPropagation();return;}
+        if(z>1.03){
+          const now=Date.now();
+          if(now-lastTap<320){setZoom(1);lastTap=0;}else lastTap=now;
+          e.stopPropagation();
+        }
+      },{passive:false,capture:true});
+    })();
+    <\/script>`;
+    html=html.replace('</head>',extraStyle+'</head>').replace('</body>',extraScript+'</body>');
+    document.open();document.write(html);document.close();
+  }catch(err){
+    document.body.innerHTML='<div class="loading"><div><strong>Não foi possível carregar.</strong><br>Atualize a página e tente novamente.</div></div>';
+  }
+})();
+</script>
+</body>
+</html>
